@@ -1,0 +1,904 @@
+---
+title: Câu hỏi thường gặp & Hướng dẫn khắc phục sự cố của CachyOS
+description: Các câu hỏi thường gặp và mẹo
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 5
+---
+
+import ImageComponent from '~/components/image-component.astro';
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+:::note
+Các câu hỏi và trả lời sau áp dụng cho CachyOS và các bản phân phối dựa trên Arch. `Điều này không có nghĩa là thay thế thông tin trên Arch Linux Wiki`
+:::
+
+:::tip
+Hãy chú ý đến các thông báo chính thức từ CachyOS trên [Diễn đàn](https://discuss.cachyos.org/c/announcements/8), bài đăng trên Reddit trong [subreddit chính thức của chúng tôi](https://www.reddit.com/r/cachyos/) hoặc [Discord #announcements](https://discord.com/channels/862292009423470592/873309651364610118) và [#updates-repo](https://discord.com/channels/862292009423470592/871739561364033566) về các vấn đề đã biết với một gói hoặc các cập nhật yêu cầu can thiệp thủ công.
+:::
+
+## Cách báo cáo vấn đề hoặc lỗi cho CachyOS
+
+:::danger
+Hãy cẩn thận khi dựa vào sự giúp đỡ và các lệnh được cung cấp bởi một mô hình AI (như ChatGPT) mà không xác thực thông tin từ các nguồn chính thức. Các mô hình AI đôi khi có thể cung cấp thông tin sai hoặc gây hiểu lầm, đặc biệt trong các ngữ cảnh kỹ thuật. Luôn đối chiếu với các tài liệu đáng tin cậy hoặc tài nguyên cộng đồng trước khi báo cáo một vấn đề.
+Nếu không, bạn có thể kết thúc với một hệ thống bị hỏng hoàn toàn hoặc làm vấn đề trở nên tệ hơn.
+:::
+
+:::tip
+Hãy nhớ. Trong thế giới Linux có một câu trích dẫn tuyệt vời: "Rất có thể ai đó khác đã gặp vấn đề tương tự trước bạn." Vì vậy, vui lòng sử dụng chức năng tìm kiếm trên Google, Arch Wiki, hoặc Diễn đàn/Discord của CachyOS trước khi báo cáo một vấn đề vì có thể nó đã được giải quyết.
+:::
+
+:::tip
+Đừng quên lệnh tldr để xem phiên bản đơn giản hóa của các trang man cho các lệnh bạn không quen thuộc. Ví dụ:
+
+Một số lệnh phổ biến và mô tả cho git:
+```bash
+tldr git
+```
+
+Bạn cũng có thể kết hợp tldr với một lệnh git cụ thể để có thêm thông tin chi tiết về một tham số, ví dụ:
+```bash
+tldr git add
+```
+:::
+
+### Nơi để báo cáo
+
+- [Github](https://github.com/CachyOS/distribution)
+- [Diễn đàn](https://discuss.cachyos.org/c/feedback/bugreports/10)
+- **Discord:** [Diễn đàn Hỗ trợ](https://discord.com/channels/862292009423470592/1400865136373403708)
+  - Trước khi tạo bài đăng mới. Vui lòng đọc [Support Guidelines & Information](https://discord.com/channels/862292009423470592/1402210965700739082) được ghim trong kênh.
+  - Hoặc nếu bạn nghĩ vấn đề của bạn có thể được giải quyết nhanh, hãy sử dụng [kênh #support](https://discord.com/channels/862292009423470592/862294383470051348).
+- [Reddit](https://www.reddit.com/r/cachyos/)
+
+### Hãy kiên nhẫn và tôn trọng
+
+Nhóm CachyOS và cộng đồng là những tình nguyện viên làm việc này trong thời gian rảnh của họ. Vui lòng kiên nhẫn và tôn trọng khi tương tác với họ. Cung cấp một báo cáo lỗi chất lượng là cách tốt nhất để vấn đề của bạn được giải quyết nhanh.
+
+Nếu bạn đặt một câu hỏi mơ hồ hoặc cung cấp thông tin không đầy đủ. Khi đó bạn có thể nhận được một câu trả lời mơ hồ hoặc không nhận được câu trả lời nào.
+
+Đây là một ví dụ:
+
+- **Câu hỏi tốt:**
+  - Sau một cập nhật gần đây (cập nhật cuối cùng của tôi là NGÀY NÀY), hệ thống của tôi không khởi động được với màn hình đen. Tôi có GPU NVIDIA (model). Tôi đã thử hạ cấp gói `linux-cachyos` về phiên bản trước, nhưng vấn đề vẫn tiếp diễn ra. Đây là kết quả của `journalctl -b -1` và `dmesg` từ môi trường live.
+- **Câu hỏi xấu hoặc mơ hồ:**
+  - Hệ thống của tôi bị hỏng, vui lòng giúp tôi.
+  <details>
+  <summary>Nếu không bạn có thể trông giống Abraham từ meme này:</summary>
+    <ImageComponent imgsrc={import('~/assets/images/abraham-meme.jpg')} />
+  </details>
+
+### Mô tả vấn đề của bạn
+
+Đây là một số điều bạn nên tự hỏi về bản thân:
+
+- Điều gì không hoạt động?
+- Việc hạ cấp gói X có khắc phục được vấn đề không?
+- Sử dụng chức năng tìm kiếm cho các vấn đề tương đương.
+- Vấn đề có xuất hiện sau một cập nhật không?
+- Bạn đã thực hiện các thay đổi trên hệ thống của riêng mình không?
+  - Ví dụ: `Thêm một cờ bổ sung vào file modprobe`
+- Có liên quan đến phần cứng không? (ví dụ: GPU, WiFi, v.v.)
+- Có liên quan đến phần mềm không? (ví dụ: ứng dụng cụ thể, môi trường desktop, v.v.)
+- Là cài đặt mới hay vấn đề có xuất hiện sau một thời gian sử dụng?
+
+## Cách thu thập nhật ký
+
+Có nhiều cách để thu thập nhật ký từ hệ thống của bạn. Đây là một vài ví dụ và công cụ bạn có thể sử dụng:
+
+### Tạo một báo cáo lỗi chung
+- CachyOS cung cấp một công cụ tuyệt vời để thu thập nhật ký từ hệ thống gọi là `cachyos-bugreport.sh`.
+  - Công cụ này sẽ thu thập nhật ký từ:
+    - `dmesg`
+    - `journalctl`
+    - `inxi` (Để thu thập thông tin phần cứng)
+  - Khi nhật ký đã được thu thập, người dùng sẽ được nhắc để quyết định có tải chúng lên trang web của chúng tôi hay không.
+  - Chạy lệnh sau trong terminal, và đăng liên kết với các lỗi vào chủ đề:
+    ```sh
+    sudo cachyos-bugreport.sh
+    ```
+
+### Thu thập nhật ký từ một chương trình không khởi động được
+- Chương trình X không còn khởi động nữa:
+  - Có nhiều lý do tại sao một chương trình đồ họa có thể không khởi động. Cách tốt nhất để thu thập nhật ký cho loại vấn đề này là chạy chương trình từ terminal. Bằng cách này, bạn có thể thấy bất kỳ thông báo lỗi hoặc kết quả nào có thể giúp chẩn đoán vấn đề.
+  - Ví dụ:
+    ```sh
+    firefox
+    ```
+    - Nếu Firefox không khởi động được, bạn có thể thấy thông báo lỗi trong terminal có thể giúp xác định vấn đề.
+    :::tip
+    Nếu bạn muốn lưu kết quả vào một tệp văn bản để dễ dàng chia sẻ, bạn có thể chuyển hướng kết quả như sau:
+    ```sh
+    firefox &> firefox-log.txt
+    ```
+    Hãy nhớ nhấn `CTRL + C` để kết thúc tiến trình sau khi nó không khởi động được để terminal ghi kết quả vào tệp.
+    :::
+
+### Kiểm tra các gói được cập nhật gần đây trong pacman.
+
+Để có danh sách các gói được cập nhật gần đây nhất trên hệ thống của bạn, bạn có thể sử dụng lệnh sau:
+
+```bash
+grep "\[ALPM\] upgraded" /var/log/pacman.log | tail -n 50
+```
+
+:::tip
+Điều chỉnh tham số `-n` của tail để có thêm nhiều dòng hơn.
+:::
+
+### Phím tắt để điều hướng trong journalctl và dmesg
+
+Các phím tắt phổ biến nhất để điều hướng qua nhật ký khi less đang ở chế độ có thể đọc được của con người là:
+
+`Các phím mũi tên`: để di chuyển lên và xuống từng dòng.
+
+`Page Down & Page Up hoặc Ctrl + A/D`: để cuộn xuống hoặc lên một trang mỗi lần.
+
+`J & K`: để di chuyển lên và xuống từng dòng (tương tự Vim).
+
+`G hoặc Home`: để nhảy đến đầu của nhật ký.
+
+`Shift + G hoặc End`: để nhảy đến cuối của nhật ký.
+
+### Sử dụng journalctl để thu thập nhật ký hệ thống
+
+Lệnh `journalctl` là một công cụ cực kỳ hữu ích để xem nhật ký hệ thống. Đây là một số lệnh hữu ích và phổ biến nhất:
+
+#### Sử dụng cơ bản và ví dụ phổ biến
+
+:::tip
+Kết hợp nhiều tùy chọn để lọc cụ thể hơn.
+:::
+
+<details>
+<summary>Xem toàn bộ nhật ký (từ cũ nhất đến mới nhất):</summary>
+```bash
+journalctl
+```
+</details>
+
+<details>
+<summary>Xem nhật ký chỉ từ lần khởi động hiện tại:</summary>
+```bash
+journalctl -b
+```
+</details>
+
+<details>
+<summary>Vấn đề về bảo mật và xác thực:</summary>
+```bash
+journalctl -u sshd -u polkit -b -0 | grep -i "fail\|error\|denied"
+```
+Tìm kiếm các lỗi xác thực và từ chối chính sách bảo mật.
+</details>
+
+<details>
+<summary>Theo dõi nhật ký theo thời gian thực:</summary>
+```bash
+journalctl -f
+```
+:::tip
+Kết hợp này với các bộ lọc khác. Ví dụ:
+```bash
+# Theo dõi dịch vụ Adguard Home:
+journalctl -u adguardhome -f
+```
+:::
+</details>
+
+<details>
+<summary>Vấn đề về âm thanh từ lần khởi động hiện tại:</summary>
+```bash
+journalctl --user -u pipewire -u pipewire-pulse -u wireplumber -b 0
+```
+Xem nhật ký từ các dịch vụ âm thanh để khắc phục sự cố âm thanh.
+</details>
+
+<details>
+<summary>Lỗi bộ nhớ (RAM):</summary>
+```bash
+journalctl -k | grep -i "memory\|ram"
+```
+Tìm kiếm các lỗi hỏng bộ nhớ hoặc các vấn đề phát hiện.
+</details>
+
+<details>
+<summary>Vấn đề về Bluetooth:</summary>
+```bash
+# Từ lần khởi động hiện tại:
+journalctl -u bluetooth -b 0
+journalctl -u bluetooth -b 0
+# Từ lần khởi động trước:
+journalctl -u bluetooth -b -1
+```
+</details>
+
+##### Lọc theo thời gian
+
+<details>
+<summary>Xem nhật ký từ vài phút/giờ gần đây:</summary>
+```bash
+journalctl --since "10 minutes ago"
+journalctl --since "1 hour ago"
+journalctl --since "2024-01-15 14:30:00"
+```
+</details>
+
+<details>
+<summary>Xem nhật ký từ một khoảng thời gian cụ thể:</summary>
+```bash
+journalctl --since "09:00" --until "10:00"
+```
+</details>
+
+##### Lọc theo Mức độ ưu tiên và Dịch vụ hoặc Chương trình
+
+Các mức độ ưu tiên có thể là: `debug`, `info`, `notice`, `warning`, `err`, `crit`, `alert`, `emerg`.
+
+Hoặc sử dụng số:
+
+`0` bằng `emerg`
+
+`1` bằng `alert`
+
+`2` bằng `crit`
+
+`3` bằng `err`
+
+`4` bằng `warning`
+
+`5` bằng `notice`
+
+`6` bằng `info`
+
+và `7` bằng `debug`.
+
+<details>
+<summary>Chỉ hiển thị thông báo lỗi, nghiêm trọng và khẩn cấp:</summary>
+```bash
+journalctl -p err..emerg
+```
+:::tip
+Bạn có thể kết hợp các tùy chọn này với các ví dụ trước:
+```bash
+journalctl -p err..emerg --since "9:00" --until "10:00"
+```
+:::
+</details>
+
+<details>
+<summary>Hiển thị nhật ký từ một dịch vụ hệ thống cụ thể:</summary>
+```bash title='Ví dụ'
+# Xem nhật ký từ dịch vụ NetworkManager:
+journalctl -u NetworkManager
+# Xem nhật ký từ dịch vụ GDM (GNOME Display Manager):
+journalctl -u gdm
+# Xem nhật ký từ dịch vụ SDDM (Simple Desktop Display Manager):
+journalctl -u sddm
+```
+</details>
+
+<details>
+<summary>Hiển thị nhật ký từ ID Tiến trình cụ thể (PID):</summary>
+```bash
+journalctl _PID=pid
+# Ví dụ:
+journalctl _PID=3344
+```
+</details>
+
+<details>
+<summary>Hiển thị nhật ký từ một tệp thực thi cụ thể:</summary>
+```bash
+journalctl path/to/executable
+# Ví dụ:
+journalctl /usr/bin/firefox
+```
+</details>
+
+### Sử dụng journalctl để kiểm tra thông báo nhân
+
+:::note
+Khi sử dụng `journalctl -k` so với `dmesg`:
+- `journalctl -k` truy cập các thông báo nhân được lưu trữ trong nhật ký systemd (liên tục qua các lần khởi động nếu được cấu hình và cung cấp tích hợp tốt hơn với việc lọc theo thời gian và các tính năng của nhật ký).
+- `dmesg` đọc bộ đệm nhân hiện tại (biến mất sau khi khởi động lại).
+:::
+
+<details>
+<summary>Xem thông báo nhân cơ bản:</summary>
+```bash
+journalctl -k
+```
+Hiển thị tất cả thông báo nhân từ nhật ký, tương đương với `dmesg` nhưng từ góc nhìn của nhật ký systemd.
+</details>
+
+<details>
+<summary>Chỉ hiển thị thông báo nhân từ lần khởi động hiện tại:</summary>
+```bash
+journalctl -k -b 0
+```
+Chỉ hiển thị các thông báo nhân từ phiên khởi động hiện tại.
+</details>
+
+<details>
+<summary>Thông báo nhân từ lần khởi động trước:</summary>
+```bash
+journalctl -k -b -1
+```
+Xem các thông báo nhân từ lần khởi động trước. Hữu ích để chẩn đoán các lỗi khởi động hoặc sự cố.
+</details>
+
+<details>
+<summary>Theo dõi thông báo nhân mới theo thời gian thực:</summary>
+```bash
+journalctl -k -f
+```
+Theo dõi các thông báo nhân khi chúng xảy ra, tuyệt vời để theo dõi các sự kiện phần cứng hoặc tải driver.
+</details>
+
+<details>
+<summary>Tìm kiếm các thông báo driver cụ thể:</summary>
+```bash
+# Ví dụ:
+# Thông báo liên quan đến GPU:
+journalctl -k | grep -i "nvidia\|amd\|intel"
+# Thông báo thiết bị USB:
+journalctl -k | grep -i "usb\|pci"
+```
+</details>
+
+<details>
+<summary>Lọc thông báo nhân theo thời gian:</summary>
+```bash
+journalctl -k --since "1 hour ago"
+journalctl -k --since "09:00" --until "10:00"
+```
+Xem các thông báo nhân từ các khoảng thời gian cụ thể.
+</details>
+
+### Sử dụng dmesg cho Thông báo Nhân
+
+Lệnh `dmesg` hiển thị bộ đệm nhân, chứa các thông báo từ nhân về việc phát hiện phần cứng, khởi tạo driver và các sự kiện hệ thống.
+
+#### Sử dụng cơ bản và Định dạng
+
+<details>
+<summary>Xem toàn bộ bộ đệm thông báo nhân:</summary>
+```bash
+dmesg
+```
+</details>
+
+<details>
+<summary>Xem với dấu thời gian có thể đọc được của con người:</summary>
+```bash
+dmesg -T
+```
+</details>
+
+<details>
+<summary>Xem trong một trình phân trang để dễ đọc hơn:</summary>
+```bash
+dmesg | less
+```
+</details>
+
+#### Lọc theo Mức độ ưu tiên
+
+Tương tự journalctl, dmesg cho phép lọc thông báo theo mức độ ưu tiên.
+
+<details>
+<summary>Chỉ hiển thị lỗi và các thông báo nghiêm trọng:</summary>
+```bash
+dmesg -l err,crit,alert,emerg
+```
+Các mức độ ưu tiên có thể là: `debug`, `info`, `notice`, `warning`, `err`, `crit`, `alert`, `emerg`.
+
+Hoặc sử dụng số:
+
+`0` bằng `emerg`
+
+`1` bằng `alert`
+
+`2` bằng `crit`
+
+`3` bằng `err`
+
+`4` bằng `warning`
+
+`5` bằng `notice`
+
+`6` bằng `info`
+
+và `7` bằng `debug`.
+</details>
+
+<details>
+<summary>Hiển thị các thông báo nhân gần đây nhất:</summary>
+```bash
+dmesg -w
+```
+</details>
+
+<details>
+<summary>Tìm kiếm các thông báo driver hoặc phần cứng cụ thể:</summary>
+```bash
+# Ví dụ:
+# Để tìm kiếm các thông báo liên quan đến USB:
+dmesg | grep -i usb | less
+# Thiết bị Bluetooth:
+dmesg | grep -i bluetooth
+# Liên quan đến NVIDIA:
+dmesg | grep -i nvidia | less
+# Thiết bị khởi tạo thất bại:
+dmesg | grep -i "error\|failed" | less
+```
+</details>
+
+##### Ví dụ cụ thể cho các vấn đề cụ thể sử dụng dmesg
+
+<details>
+<summary>Khi thiết bị USB không được nhận dạng:</summary>
+```bash
+dmesg -w | grep -i usb
+```
+Sau đó cắm thiết bị vào và theo dõi các thông báo mới.
+</details>
+
+<details>
+<summary>Vấn đề khởi tạo GPU:</summary>
+```bash
+dmesg | grep -i "nvidia\|amd\|intel\|radeon\|drm\|gpu" | less
+```
+</details>
+
+<details>
+<summary>Vấn đề về WiFi hoặc bộ điều hợp mạng:</summary>
+```bash
+dmesg | grep -i "wlan\|wifi\|network\|firmware" | tail -20
+```
+Kiểm tra các lỗi tải firmware hoặc lỗi driver ngăn card WiFi của bạn hoạt động.
+</details>
+
+<details>
+<summary>Vấn đề nhận diện HDD/SSD:</summary>
+```bash
+dmesg | grep -i "sda\|sdb\|nvme\|scsi\|disk" | head -30
+```
+Sử dụng khi một thiết bị lưu trữ không được phát hiện hoặc hiển thị lỗi trong quá trình khởi động.
+</details>
+
+<details>
+<summary>Hệ thống bị treo hoặc sự cố nhân:</summary>
+```bash
+dmesg -T -l emerg,alert,crit,err | tail -30
+```
+Kiểm tra các thông báo nhân nghiêm trọng nhất xảy ra trước khi hệ thống bị treo hoặc sự cố.
+</details>
+
+<details>
+<summary>Lỗi bộ nhớ (RAM):</summary>
+```bash
+dmesg | grep -i "memory\|ram"
+```
+Tìm kiếm các lỗi hỏng bộ nhớ hoặc báo cáo lỗi ECC.
+</details>
+
+<details>
+<summary>Sự kiện thiết bị âm thanh:</summary>
+```bash
+dmesg | grep -i "audio\|snd\|hda" | grep -i "error\|fail\|card"
+```
+Kiểm tra xem card âm thanh của bạn có được phát hiện đúng và các driver có được tải đúng.
+</details>
+
+<details>
+<summary>Lỗi tải mô-đun nhân:</summary>
+```bash
+dmesg | grep -i "module\|init" | grep -i "error\|fail"
+```
+Khi các driver phần cứng cụ thể không tải được hoặc không khởi tạo được.
+</details>
+
+<details>
+<summary>Theo dõi thời gian thực cho các sự kiện phần cứng:</summary>
+```bash
+dmesg -w -l warn,err,crit,alert,emerg -T
+```
+Theo dõi liên tục các thông báo nhân quan trọng trong khi bạn tái tạo vấn đề.
+</details>
+
+<details>
+<summary>Vấn đề về BIOS/UEFI và firmware:</summary>
+```bash
+dmesg | grep -i "bios\|uefi\|firmware\|efi"
+```
+Kiểm tra các vấn đề tương thích giữa phần cứng của bạn và nhân Linux.
+</details>
+
+## Cài đặt & Môi trường Live
+
+### Tại sao ISO live của CachyOS chỉ bao gồm KDE Plasma?
+
+Chúng tôi đã chọn tập trung vào việc phát triển và bảo trì cho môi trường desktop KDE Plasma. Điều này cho phép chúng tôi cung cấp một trải nghiệm người dùng được mài bóng, ổn định và nhất quán hơn trên ISO live của mình.
+
+Môi trường live chủ yếu được dự định để cài đặt CachyOS hoặc sử dụng cachy-chroot để khôi phục hệ thống. Để thử nghiệm an toàn các môi trường desktop hoặc trình quản lý cửa sổ khác, chúng tôi khuyến nghị cao hãy thử chúng trong máy ảo (VM).
+
+### Tại sao trình cài đặt mất nhiều thời gian để bắt đầu sau khi nhấp vào "Khởi động Trình cài đặt"?
+
+:::caution
+Hãy chắc bảo rằng bạn có kết nối Internet hoạt động/đang chạy, nếu không sẽ không có gì xảy ra sau khi bạn nhấn nút này.
+:::
+
+Trình cài đặt không bị treo. Nó đang chạy một script nền cần thiết để chuẩn bị hệ thống của bạn cho việc cài đặt. Quá trình này đảm bảo rằng keyrings và đồng hồ của hệ thống của bạn được cập nhật, giúp ngăn chặn các vấn đề cài đặt phổ biến.
+
+[Xem script trên GitHub](https://github.com/CachyOS/CachyOS-Live-ISO/blob/master/archiso/airootfs/usr/local/bin/calamares-online.sh) để hiểu rõ hơn về những gì nó thực hiện.
+
+<Steps>
+  1. Xóa các file keyring cũ.
+  2. Cài đặt và cập nhật các gói keyring Arch Linux & CachyOS mới nhất.
+  3. Khởi tạo và điền đầy đủ keyring pacman.
+  4. Bật đồng bộ hóa thời gian mạng.
+  5. Kiểm tra loại khởi động của hệ thống của bạn (UEFI hoặc BIOS/MBR) để nhắc người dùng chọn trình quản lý khởi động tùy thuộc vào loại.
+
+</Steps>
+
+Đây là lý do tại sao nó có mất một chút thời gian để tải trình cài đặt.
+
+### Tại sao cài đặt của tôi bị kẹt ở 33%?
+
+Điều này xảy ra khi trình cài đặt đang gặp khó khăn trong việc tải các gói. Thường là dấu hiệu của kết nối Internet rất chậm hoặc không ổn định.
+
+### Khôi phục Trình quản lý Khởi động và Btrfs snapshots
+
+:::note
+Trường hợp bị xóa phân vùng /boot. Vui lòng tạo một phân vùng mới theo [lược đồ phân vùng](/installation/installation_on_root#uefigpt) tương ứng từ bước 5.
+:::
+
+### Các bước để khôi phục trình quản lý khởi động
+
+:::tip
+Nếu bạn không chắc chắn cách sử dụng `cachy-chroot`, vui lòng tham khảo tài liệu [Trợ giúp chroot CachyOS](/features/cachy_chroot) trước tiên.
+:::
+
+<Steps>
+  1. Khởi động vào ISO live của CachyOS.
+  2. Mở terminal và chroot vào hệ thống đã cài đặt của bạn sử dụng lệnh `cachy-chroot`.
+     ```bash
+     sudo cachy-chroot
+     ```
+     Nếu hệ thống của bạn sử dụng BTRFS với bộ cài đặt sẵn của chúng tôi, hãy nhập `y` trong lời nhắc:
+     ```bash title='Ví dụ'
+     Bạn có muốn sử dụng bộ cài đặt BTRFS của CachyOS để tự động gắn kết phân vùng root không? y
+     Bạn có muốn gắn kết các phân vùng bổ sung? · yes
+     Nhập điểm gắn kết cho phân vùng bổ sung (ví dụ: /boot) gõ 'skip' để hủy:
+     # Gõ /boot cho systemd-boot, Limine hoặc rEFInd
+     # Gõ /boot/efi cho GRUB
+     ```
+  3. Làm theo hướng dẫn dưới cho trình quản lý khởi động và loại hệ thống của bạn (UEFI hoặc MBR/BIOS).
+     <Tabs>
+             <TabItem label='GRUB'>
+                 Cài đặt lại GRUB với lệnh sau:
+                 <Tabs>
+                     <TabItem label='UEFI'>
+                         ```bash
+                         sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=cachyos
+                         ```
+                     </TabItem>
+                     <TabItem label='MBR/BIOS'>
+                         ```bash
+                         sudo grub-install --target=i386-pc /dev/sdX # Thay thế sdX bằng đĩa của bạn ví dụ: sda
+                         ```
+                     </TabItem>
+                 </Tabs>
+             </TabItem>
+             <TabItem label='systemd-boot (chỉ UEFI)'>
+                 Cài đặt lại systemd-boot với lệnh sau:
+                 ```bash
+                 sudo bootctl install
+                 ```
+             </TabItem>
+             <TabItem label='Limine'>
+                 Cài đặt lại Limine với lệnh sau:
+                 <Tabs>
+                     <TabItem label='UEFI'>
+                         ```bash
+                         sudo limine-install
+                         ```
+                     </TabItem>
+                     <TabItem label='MBR/BIOS'>
+                         ```bash
+                         sudo limine bios-install /dev/sdX # Thay thế sdX bằng đĩa của bạn ví dụ: sda
+                         ```
+                     </TabItem>
+                 </Tabs>
+             </TabItem>
+             <TabItem label='rEFInd (chỉ UEFI)'>
+                 Cài đặt lại rEFInd với lệnh sau:
+                 ```bash
+                 sudo refind-install
+                 ```
+             </TabItem>
+         </Tabs>
+     4. Cài đặt lại nhân CachyOS:
+         ```bash
+         sudo pacman -Syu linux-cachyos linux-cachyos-headers
+         ```
+     5. Thoát khỏi cachy-chroot:
+         ```bash
+         exit
+         ```
+     6. Khởi động lại hệ thống của bạn.
+</Steps>
+
+### Sử dụng snapshot Btrfs làm điểm khôi phục
+
+:::note
+Mặc dù CachyOS tự động tạo các snapshot Btrfs trước mỗi cập nhật hệ thống thông qua việc sử dụng pacman hooks, luôn là một ý tưởng tốt để tạo snapshot của riêng bạn trước khi thực hiện các thay đổi lớn đối với hệ thống.
+:::
+
+Một snapshot Btrfs xuất hiện như một mục khởi động bổ sung trong menu trình quản lý khởi động của bạn và thường có tên như sau:
+- `10 | 2025-10-30 14:37:10`
+<details>
+<summary>Ví dụ trong ảnh chụp màn hình:</summary>
+<ImageComponent imgsrc={import('~/assets/images/btrfs-snapshot-boot-entry.jpg')} />
+</details>
+
+Bạn cũng có thể sử dụng ứng dụng Btrfs Assistant để quản lý các snapshot. Nó cung cấp giao diện đồ họa để tạo, xóa và khôi phục các snapshot.
+
+<details>
+    <summary>Ảnh chụp màn hình của Btrfs Assistant:</summary>
+    <ImageComponent imgsrc={import('~/assets/images/btrfs-assistant-example.png')} />
+</details>
+
+## Quản lý Gói & Cập nhật
+
+### Khắc phục sự cố Pacman
+
+#### lỗi: signature is invalid
+
+Lỗi này cho thấy một vấn đề với chữ ký mật mã của một gói. Thường gây ra bởi mirror quá hạn hoặc keyring bị hỏng trên hệ thống của bạn.
+
+Trong khi các mirror thường tự khắc phục sau một thời gian ngắn, nếu vấn đề vẫn tiếp diễn ra, bạn nên thử một trong hai giải pháp sau.
+
+<Tabs>
+
+<TabItem label='Giải pháp đầu tiên: Đồng bộ lại các mirror Pacman'>
+ 
+```sh
+sudo pacman -Syu
+```
+</TabItem>
+
+<TabItem label='Giải pháp thứ hai: Xếp hạng các mirror của bạn'>
+ 
+```sh title='Xếp hạng các mirror của bạn'
+sudo cachyos-rate-mirrors
+```
+</TabItem>
+
+<TabItem label='Giải pháp thứ ba: Đặt lại Keyrings'>
+Nếu xếp hạng các mirror không hiệu quả, rất có thể do keyrings của hệ thống bạn bị hỏng.
+
+- Mở CachyOS Hello và điều hướng đến **Apps/Tweaks**.
+- Nhấp vào nút Reset keyrings.
+</TabItem>
+
+</Tabs>
+
+#### lỗi: 404 Not Found
+
+Lỗi này có nghĩa là gói bạn đang cố gắng cài đặt không có sẵn trên mirror hiện tại của bạn. Điều này thường xảy ra khi cơ sở dữ liệu gói cục bộ của bạn không đồng bộ với các kho lưu trữ từ xa.
+
+**Giải pháp:**
+
+Chạy lệnh sau để làm mới cơ sở dữ liệu gói của bạn và thực hiện nâng cấp toàn bộ hệ thống. Điều này sẽ đảm bảo hệ thống của bạn biết về các gói có sẵn mới nhất và thực hiện nâng cấp hệ thống.
+
+```sh
+sudo pacman -Syu
+# Sau đó thử cài đặt lại gói bạn muốn:
+sudo pacman -S ten_goi_ban_muon_cai_dat
+```
+
+#### lỗi: could not remove
+
+Lỗi này xảy ra khi bộ đệm pacman chứa các tệp mà hệ thống không thể tự động quản lý. Đây là một vấn đề phổ biến có thể dễ dàng khắc phục.
+
+**Giải pháp 1: Sử dụng CachyOS Hello.**
+- Cách đơn giản nhất để khắc phục điều này là với CachyOS Hello. Mở nó và điều hướng đến **Apps/Tweaks**, sau đó nhấp vào nút **Clear package cache**.
+
+**Giải pháp 2: Xóa thủ công bộ đệm.**
+- Nếu bạn không muốn sử dụng CachyOS Hello, bạn có thể xóa thủ công các gói mồ côi khỏi bộ đệm:
+   ```sh
+   sudo rm -r /var/cache/pacman/pkg/*
+   ```
+
+#### lỗi: File is corrupted (invalid or corrupted package (PGP signature))
+
+```sh
+# Ví dụ:
+:: File /var/cache/pacman/pkg/python-charset-normalizer-3.4.0-1-any.pkg.tar.zst is corrupted (invalid or corrupted package (PGP signature)).
+```
+
+Lỗi này thường cho thấy một vấn đề với keyrings của hệ thống, chúng xác thực tính xác thực của các gói. Các lệnh sau sẽ đặt lại và điền đầy đủ keyrings để khắc phục vấn đề này.
+
+```sh
+sudo rm -rf /etc/pacman.d/gnupg/
+sudo pacman-key --init
+sudo pacman-key --populate
+sudo pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+sudo pacman-key --lsign-key F3B607488DB35A47
+sudo rm -R /var/lib/pacman/sync
+```
+
+#### lỗi: unable to lock database
+
+Lỗi này xảy ra khi một tiến trình pacman khác đang chạy, khóa cơ sở dữ liệu để ngăn chặn hỏng. Nếu tiến trình trước bị treo hoặc bị gián đoạn, tệp khóa `db.lck` có thể không bị xóa.
+
+**Giải pháp 1: Sử dụng CachyOS Hello.**
+- Cách đơn giản nhất để khắc phục điều này là với chức năng **Remove db lock** trong tab **Apps/Tweaks** của CachyOS Hello.
+
+**Giải pháp 2: Xóa thủ công tệp khóa.**
+- Nếu bạn không muốn sử dụng CachyOS Hello, bạn có thể xóa thủ công tệp khóa:
+   ```sh
+   sudo rm /var/lib/pacman/db.lck
+   ```
+
+#### lỗi: failed retrieving file ... Connection timed out
+
+Bạn có thể thấy các lỗi như sau:
+
+```text
+# Ví dụ lỗi:
+error: failed retrieving file '...' from ... : Connection timed out
+error: failed retrieving file '...' from ... : Couldn't resolve host name
+error: failed retrieving file '...' from ... : The requested URL returned error: 526
+```
+
+Các lỗi này gần như luôn cho thấy một vấn đề với các mirror hiện tại của bạn. Chúng có thể chậm, tạm thời ngừng hoạt động hoặc không thể truy cập được từ vị trí của bạn.
+
+**Giải pháp:** Cách tốt nhất để khắc phục điều này là cập nhật danh sách mirror của bạn với các mirror nhanh hơn và đáng tin cậy hơn.
+
+```sh
+sudo cachyos-rate-mirrors
+# Sau đó bạn có thể cập nhật hệ thống của mình với:
+sudo pacman -Syu
+```
+
+:::tip
+Lệnh `cachyos-rate-mirrors` kiểm tra các mirror CachyOS có sẵn dựa trên tốc độ và trạng thái đồng bộ hóa, sau đó cập nhật tệp danh sách mirror của bạn (`/etc/pacman.d/cachyos-mirrorlist`) với các mirror hoạt động tốt nhất.
+
+Hãy cân nhắc chạy nó định kỳ, đặc biệt nếu bạn nhận thấy sự chậm lại trong quá trình cập nhật hệ thống.
+:::
+
+#### cảnh báo: local is newer than...
+
+Cảnh báo này xuất hiện khi phiên bản gói trên hệ thống của bạn mới hơn phiên bản có sẵn trong các kho lưu trữ chính thức. Điều này có thể xảy ra nếu mirror bị lỗi ngày hoặc gói bị hạ cấp trong các kho lưu trữ hoặc nếu gói được cài đặt từ một nguồn khác.
+
+**Giải pháp:** Lệnh `pacman -Syuu` thực hiện nâng cấp toàn bộ hệ thống và cho phép hạ cấp, sẽ khắc phục cảnh báo này bằng cách đồng bộ hóa các gói cục bộ của bạn với các phiên bản kho lưu trữ.
+```sh title='Để loại bỏ các cảnh báo này, hãy thực hiện lệnh sau:'
+sudo pacman -Syuu
+```
+
+#### lỗi: failed to commit transaction (conflicting files)
+
+Lỗi này cho thấy pacman đang cố gắng cài đặt hoặc cập nhật một gói chứa các tệp đã có sẵn trên hệ thống của bạn từ một nguồn khác. Đây là một tính năng an toàn được xây dựng để ngăn chặn hỏng hệ thống.
+
+**Giải pháp:** Bạn có thể khắc phục vấn đề này bằng cách xóa thủ công các tệp xung đột. Để biết thêm thông tin và các giải pháp, vui lòng tham khảo [Arch Wiki](https://wiki.archlinux.org/title/Pacman#%22Failed_to_commit_transaction_(conflicting_files)%22_error).
+```sh title='Ví dụ'
+error: failed to commit transaction (conflicting files)
+nvidia-utils: /usr/lib/environment.d/10-gsk.conf exists in filesystem
+Errors occurred, no packages were upgraded.
+-> error installing repo packages
+```
+
+Để khắc phục ví dụ cụ thể này, bạn sẽ xóa tệp xung đột rồi chạy lại lệnh cập nhật của mình:
+```sh
+sudo rm /usr/lib/environment.d/10-gsk.conf
+```
+
+Sau đó:
+```sh
+sudo pacman -Syu
+```
+
+#### LỖI: module not found: 'nvidia', 'nvidia_modeset', ...
+
+```sh title='Ví dụ'
+==> ERROR: module not found: 'nvidia'
+==> ERROR: module not found: 'nvidia_modeset'
+==> ERROR: module not found: 'nvidia_uvm'
+==> ERROR: module not found: 'nvidia_drm'
+```
+
+**Hai lý do cho lỗi này:**
+
+1) Vì Tải Mô-đun Sớm luôn được bật trong chwd, mkinitcpio luôn mong đợi sự có mặt của các mô-đun NVIDIA; lỗi này phát sinh khi các mô-đun đó bị thiếu.
+2) Bạn có thể thiếu các mô-đun NVIDIA từ các nhân khác đã cài đặt trên hệ thống của bạn.
+
+```sh title='Cài đặt gói sau để khắc phục lỗi này'
+sudo pacman -S nvidia
+```
+
+### Vấn đề Phần mềm Cụ thể
+
+#### Discord yêu cầu một cập nhật chưa có sẵn trong kho lưu trữ
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/discord-update.png')} />
+
+Điều này xảy ra vì Discord sử dụng hệ thống cập nhật riêng của mình, luôn đi trước các kho lưu trữ chính thức. Một phiên bản mới của ứng dụng đã được phát hành nhưng chưa được đóng gói cho các mirror của chúng tôi.
+
+Để khắc phục tạm thời vấn đề này, hãy làm theo [hướng dẫn khắc phục của Arch Wiki](<https://wiki.archlinux.org/title/Discord#Discord_asks_for_an_update_not_yet_available_in_the_repository>).
+
+### Câu hỏi chung
+
+#### Khoảng cách các gói git được cập nhật?
+
+Thường là một lần mỗi thứ Hai, mặc dù có thể có ngoại lệ.
+
+#### Các gói -bin trong các kho lưu trữ của CachyOS có được hưởng từ các tối ưu hóa hiệu suất giống như các gói dựa trên nguồn không?
+
+Không. Các gói `-bin` là các tệp thực thi đã biên dịch trước và không bao gồm các tối ưu hóa hiệu suất giống như các gói dựa trên nguồn trong các kho lưu trữ của CachyOS.
+
+#### Cách vô hiệu hóa hoạt ảnh lúc khởi động (Plymouth)
+
+:::note
+Điều này có thể giải quyết vấn đề màn hình đen trên một số hệ thống ví dụ: với các GPU NVIDIA cũ
+:::
+
+Để vô hiệu hóa hoạt ảnh lúc khởi động, bạn cần chỉnh [cấu hình trình quản lý khởi động](/configuration/boot_manager_configuration) của mình và thêm các tham số nhân sau:
+
+```sh
+plymouth.enable=0 disablehooks=plymouth
+```
+
+:::note
+systemd-boot, GRUB và Limine yêu cầu tạo lại initramfs
+
+systemd-boot: `sudo sdboot-manage gen`
+
+GRUB: `sudo grub-mkconfig -o /boot/grub/grub.cfg`
+
+Limine: `sudo limine-mkinitcpio`
+:::
+
+#### Gửi yêu cầu Gói đến CachyOS
+
+CachyOS cung cấp một danh sách rộng các gói AUR được sử dụng phổ biến. Người dùng có thể tạo yêu cầu cho các gói AUR, nếu được duyệt, sẽ tự động được cập nhật bởi máy chủ của chúng tôi.
+
+Nếu bạn muốn chúng tôi thêm một gói, bạn có thể gửi yêu cầu trên GitHub hoặc trong diễn đàn.
+
+- [GitHub](https://github.com/CachyOS/distribution/issues)
+- [Diễn đàn](https://discuss.cachyos.org/c/feedback/repository/11)
+- [Discord: Kênh Phản hồi](https://discord.com/channels/862292009423470592/1150723027986813018)
+
+### Bảo mật & Thực hành tốt nhất
+
+### Thực hành An toàn AUR
+
+AUR cung cấp một lựa chọn khổng lồ, nhưng bảo mật là tối quan trọng. Đây là một hướng dẫn ngắn gọn về việc sử dụng AUR an toàn cho hệ thống CachyOS của bạn.
+
+* **1. Hiểu PKGBUILD:** Đó là script build. Hiểu cấu trúc của nó, các biến (`source`, `pkgname`), và các hàm (`build()`, `package()`).
+* **2. Xác thực Liên kết Nguồn:** Luôn kiểm tra xem các URL `source` trỏ đến các trang dự án chính thức hoặc các kho lưu trữ đáng tin cậy. Tránh các liên kết đáng ngờ hoặc cá nhân.
+* **3. Xem lại Các bước Cài đặt:** Kiểm tra nơi các tệp được cài đặt (`hàm package()`) và nếu có lệnh nào bất thường hoặc chạm vào các khu vực hệ thống nhạy cảm. Kiểm tra cả các tệp `.install`.
+* **4. Kiểm tra Người Duy trì:** Tìm vào lịch sử dụng của người duy trì trên AUR để tìm các vấn đề bảo mật hoặc hoạt động đáng ngờ trước.
+* **5. Kiểm tra Checksums & PGP:** Cực kỳ quan trọng! Xác nhận tất cả các checksums (SHA256, BLAKE2b, v.v.) khớp với nguồn gốc. Sử dụng chữ ký PGP (`validpgpkeys`) để xác thực tính xác thực khi có sẵn.
+* **6. Hãy Cẩn trọng với Các gói -bin:** Các gói này sử dụng các tệp thực thi đã biên dịch trước, nghĩa là bạn không thể kiểm tra được nguồn. Hãy áp dụng sự xem xét tối đa đối với nguồn gốc và tính toàn vẹn của chúng.
+* **7. Đọc Bình luận Cộng đồng:** Kiểm tra trang AUR để tìm các cảnh báo, vấn đề hoặc thông tin chi tiết từ người dùng khác.
+* **8. Đừng bao giờ bỏ qua Các Kiểm tra Tính toàn vẹn:** Không bao giờ sử dụng các cờ như `--skipinteg` hoặc tương tự để bỏ qua tất cả các kiểm tra bảo mật. Đừng làm vậy!
+* **9. Kiểm soát AUR Helper của bạn:** Hiểu cách trình trợ giúp của bạn (yay, paru, v.v.) hoạt động. Đảm bảo nó hiển thị PKGBUILD và các diff cho bạn, hoặc xây dựng thủ công bằng `makepkg`.
+* **10. Đánh giá Tính cần thiết:** Trước khi cài đặt, hãy tự hỏi liệu bạn thực sự cần gói AUR này, hoặc liệu có tồn tại một giải pháp thay thế trong kho chính thức.
+* **11. Giữ Hệ thống của bạn được Cập nhật:** Chạy định kỳ `sudo pacman -Syu` để đảm bảo tất cả các thành phần hệ thống của bạn, bao gồm `pacman` và `makepkg`, đều có các bản vá bảo mật mới nhất.
+Hãy Cảnh giác: Giữ hệ thống dựa trên Arch của bạn an toàn!
+
+### Chọn một Trình quản lý Gói Đồ họa
+
+Mặc dù các trình quản lý gói đồ họa mang lại sự tiện lợi, một số được biết là đã gây ra các vấn đề nghiêm trọng trên các hệ thống phát hành liên tục như CachyOS và Arch và nên được tránh để quản lý các gói hệ thống.
+
+-   **Pamac:** Đã biết đến việc xử lý sai một số tác vụ quản lý gói, chẳng hạn như làm hỏng keyrings hệ thống. Điều này có thể dẫn đến các lỗi chữ ký PGP ngăn bạn cập nhật hệ thống của mình.
+-   **Discover (KDE) & GNOME Software Center:** Các ứng dụng này sử dụng phần trợ trợ PackageKit. Mặc dù chúng thường an toàn khi quản lý Flatpaks, việc sử dụng chúng để cài đặt hoặc cập nhật **các gói hệ thống** là rủi ro. Các trình quản lý dựa trên PackageKit cũng có thể không ổn định hoặc dễ bị treo, có thể để hệ thống của bạn ở trạng thái hỏng sau một lệnh thất bại.
+
+Để có sự ổn định và đáng tin cậy tối đa, chúng tôi **khuyến nghị cao** quản lý các gói hệ thống thông qua dòng lệnh với `pacman`
+
+Nếu bạn thích giao diện đồ họa, các trình bao bọc dòng lệnh như **[Octopi](/configuration/post_install_setup/#updating-the-system)** hoặc **CachyOS Package Installer** được coi là các lựa chọn an toàn hơn, vì chúng là các trình bao bọc trực tiếp hơn cho chức năng của pacman.

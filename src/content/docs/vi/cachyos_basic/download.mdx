@@ -1,0 +1,125 @@
+---
+title: Tải xuống và Xác thực
+description: Tải xuống và Xác thực ISO CachyOS.
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Nguồn ISO Chính thức
+
+ISO CachyOS có thể được lấy từ các nguồn sau:
+
+*   [Website](https://cachyos.org/download)
+*   [SourceForge](https://sourceforge.net/projects/cachyos-arch/files/)
+*   [Mirror CachyOS](https://mirror.cachyos.org/ISO/)
+
+## Xác thực Tính toàn vẹn của ISO với SHA256
+
+:::caution[CẢNH BÁO]
+Luôn thực hiện thêm bước để xác thực tính toàn vẹn của ISO để tránh các vấn đề không mong muốn trong quá trình cài đặt hoặc khi tạo phương tiện khởi động.
+:::
+
+**Phiên bản ISO hiện tại:** `251129`
+
+**Băm SHA256:** `2ab25f72ce8fece890b440cf9e260fc3d57ae4f5fb5308086f670240de02da7b`
+
+<Tabs>
+
+<TabItem label='Windows'>
+
+<Steps>
+
+1. Tải xuống [file](https://mirror.cachyos.org/ISO/desktop/251129/cachyos-desktop-linux-251129.iso.sha256) chứa băm SHA256 **(Mở nó với Trình soạn thảo Văn bản, ví dụ: Notepad).**
+2. Mở CMD hoặc PowerShell với quyền Quản trị viên và [di chuyển đến](https://www.wikihow.com/Change-Directories-in-Command-Prompt) đường dẫn nơi lưu trữ file ISO và SHA256.
+3. Thực hiện lệnh sau:
+   ```powershell
+   # Ví dụ:
+   certUtil -hashfile cachyos-desktop-linux-251129.iso SHA256
+   ```
+4. So sánh kết quả băm của certUtil với băm từ file đã tải xuống trong **Bước 1**. Nếu chúng khớp, bạn có thể tiếp tục với việc cài đặt CachyOS.
+
+</Steps>
+
+</TabItem>
+
+<TabItem label='Linux'>
+
+<Steps>
+
+1. Tải xuống [file](https://mirror.cachyos.org/ISO/desktop/251129/cachyos-desktop-linux-251129.iso.sha256) chứa băm SHA256.
+2. Mở terminal, di chuyển đến thư mục chứa file `.sha256`, và thực hiện các lệnh sau:
+   ```sh
+   # Ví dụ:
+   cd Downloads/
+   cat cachyos-desktop-linux-251129.iso.sha256
+   # 2ab25f72ce8fece890b440cf9e260fc3d57ae4f5fb5308086f670240de02da7b
+   ```
+3. So sánh kết quả từ **Bước 2** và thực hiện lệnh sau để kiểm tra băm của file ISO:
+   ```sh
+   # Ví dụ:
+   sha256sum cachyos-desktop-linux-251129.iso
+   ```
+4. Nếu các băm từ **Bước 2** và **Bước 3** khớp, bạn có thể tiếp tục với việc cài đặt CachyOS.
+
+</Steps>
+
+</TabItem>
+
+<TabItem label='macOS'>
+
+<Steps>
+
+1. Tải xuống [file](https://mirror.cachyos.org/ISO/desktop/251129/cachyos-desktop-linux-251129.iso.sha256) chứa băm SHA256.
+2. Mở terminal, di chuyển đến thư mục chứa file `.sha256`, và thực hiện các lệnh sau:
+   ```sh
+   # Ví dụ:
+   cd Downloads/
+   cat cachyos-desktop-linux-251129.iso.sha256
+   # 2ab25f72ce8fece890b440cf9e260fc3d57ae4f5fb5308086f670240de02da7b
+   ```
+3. So sánh kết quả từ **Bước 2** và thực hiện lệnh sau để kiểm tra băm của file ISO:
+   ```sh
+   # Ví dụ:
+   shasum -a 256 cachyos-desktop-linux-251129.iso
+   ```
+4. Nếu các băm từ **Bước 2** và **Bước 3** khớp, bạn có thể tiếp tục với việc cài đặt CachyOS.
+
+</Steps>
+
+</TabItem>
+
+</Tabs>
+
+## Xác thực Tính xác thực của ISO (Linux)
+
+Để xác thực tính xác thực của file ISO và đảm bảo rằng đó là file chính thức được phát hành bởi nhóm phát triển CachyOS:
+
+<Steps>
+
+1. Nhập khóa GPG để xác thực tính xác thực:
+
+   ```shell
+   gpg --keyserver hkps://keys.openpgp.org --recv-key F3B607488DB35A47
+   ```
+
+2. Tải xuống file ISO và file chữ ký [.sig](https://cdn77.cachyos.org/ISO/desktop/251129/cachyos-desktop-linux-251129.iso.sig) của nó và thực hiện lệnh sau (bằng cách thay thế `full_iso_name.iso` bằng tên file ISO thực tế):
+   ```shell
+   gpg --verify full_iso_name.iso.sig full_iso_name.iso
+   ```
+
+   Nếu bạn nhận được kết quả **Good signature**, file ISO là chính xác:
+   ```
+   gpg: Signature made sáb 29 nov 2025 13:10:22 -03
+   gpg:                using RSA key 882DCFE48E2051D48E2562ABF3B607488DB35A47
+   gpg: Good signature from "CachyOS <admin@cachyos.org>" [unknown]
+   gpg: WARNING: This key is not certified with a trusted signature!
+   gpg:          There is no indication that the signature belongs to the owner.
+   Primary key fingerprint: 882D CFE4 8E20 51D4 8E25  62AB F3B6 0748 8DB3 5A47
+   ```
+
+</Steps>
+
+:::danger
+Nếu kết quả không trả về chuỗi **Good signature** hoặc ID khóa không khớp, đừng sử dụng ISO. Hãy chắc chắn rằng ISO đã tải xuống đến
+từ một nguồn CachyOS hợp pháp, vì chữ ký xấu có thể cho thấy ISO đã bị can thiệp.
+:::

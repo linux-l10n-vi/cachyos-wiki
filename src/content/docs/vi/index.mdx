@@ -1,0 +1,38 @@
+---
+title: Chào mừng đến với CachyOS Wiki
+description: Bắt đầu với CachyOS
+template: splash
+hero:
+  tagline: Nâng cao trải nghiệm Arch Linux của bạn.
+  image:
+    file: ~/assets/logo.png
+  actions:
+    - text: Bắt đầu
+      link: /cachyos_basic/download
+      icon: right-arrow
+      variant: primary
+    - text: Diễn đàn
+      link: https://discuss.cachyos.org/
+      icon: document
+      variant: primary
+    - text: Discord
+      link: https://discord.gg/cachyos-862292009423470592
+      icon: discord
+      variant: primary
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Bắt đầu
+
+<CardGrid>
+  <LinkCard title="Câu hỏi thường gặp & Hướng dẫn khắc phục sự cố của CachyOS" href="/cachyos_basic/faq" description="Tìm câu trả lời cho các câu hỏi phổ biến về CachyOS.">
+  </LinkCard>
+  <LinkCard title="Cách CachyOS Cải thiện Hiệu suất" href="/cachyos_basic/why_cachyos"
+   description="Xem các thay đổi chúng tôi thực hiện để cải thiện hiệu suất.">
+  </LinkCard>
+  <LinkCard title="Yêu cầu & Thiết lập trước cài đặt" href="/installation/installation_prepare" description="Đảm bảo hệ thống của bạn đã sẵn sàng để cài đặt CachyOS.">
+  </LinkCard>
+  <LinkCard title="Hướng dẫn cài đặt" href="/installation/installation_on_root" description="Hướng dẫn từng bước để cài đặt CachyOS trên hệ thống của bạn.">
+  </LinkCard>
+</CardGrid>
