@@ -1,0 +1,395 @@
+---
+title: Cài đặt CachyOS trên Desktop/Laptop
+description: Hướng dẫn cài đặt CachyOS trên Máy tính để bàn hoặc Máy tính xách tay
+sidebar:
+  order: 1
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 4
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Trước khi bắt đầu
+
+:::note[Nếu bạn chỉ thấy GRUB và Limine là các tùy chọn trình quản lý khởi động sau khi nhấn Launch Installer, thì hệ thống đang khởi động ở chế độ Legacy/BIOS.]
+:::
+
+:::danger[Việc cài đặt nhiều môi trường desktop không được phép trong quá trình cài đặt.]
+:::
+
+:::caution[Secure Boot và CSM phải được tắt trong cài đặt BIOS/UEFI khi cài đặt ở chế độ UEFI.]
+Để thiết lập Secure Boot sau khi cài đặt, hãy tham khảo phần [Secure Boot](/configuration/secure_boot_setup).
+
+`Legacy USB Support` nên được đặt thành `Auto`
+:::
+
+:::caution
+Các tùy chọn `Install alongside` và `Replace partition` không đáng tin cậy 100% và có thể gây ra lỗi cài đặt.
+
+`Phân vùng thủ công` là phương pháp được **khuyến nghị** khi cài đặt CachyOS.
+:::
+
+:::tip
+Khuyến nghị mạnh mẽ nên khởi động lại ISO sau một lần cài đặt thất bại.
+
+Nếu không, các lỗi liên tục có thể xảy ra trong quá trình cài đặt.
+
+Điều này xảy ra vì trình cài đặt không gỡ gắn kết (unmount) phân vùng đúng cách khi cài đặt thất bại.
+
+:::
+
+## Phương pháp cài đặt
+
+### Phân vùng thủ công
+
+:::note[Trước khi tiếp tục với việc phân vùng đĩa cho cài đặt UEFI.]
+    ```sh title='Thực hiện lệnh này trong terminal'
+    efibootmgr -v
+    ```
+Nếu kết quả là: `EFI variables are not supported on this system.` Thì hệ thống đang khởi động ở chế độ Legacy/BIOS và bạn cần đảm bảo chế độ UEFI được cấu hình trong cài đặt BIOS/UEFI. Tham khảo **[Phần Yêu cầu](/installation/installation_on_root#_top).**
+:::
+
+#### UEFI/GPT
+
+Bảng phân vùng cho mỗi trình quản lý khởi động khác nhau. Vui lòng làm theo hướng dẫn đúng cho từng loại.
+
+<Tabs>
+
+<TabItem label='systemd-boot & rEFInd'>
+
+<Steps>
+
+1. Khởi động vào ISO và nhấp vào nút **Launch Installer**
+
+2. Đặt **Ngôn ngữ** và **Khu vực/Múi giờ** ưa thích
+
+3. Cấu hình **Bố cục Bàn phím**
+
+4. Chọn **Phân vùng thủ công**
+
+5. Tạo một phân vùng mới với các thông số sau:
+   - ##### Kích thước: **2048MiB**
+   - ##### Hệ thống tệp: **FAT32**
+   - ##### Điểm gắn kết: **/boot**
+   - ##### Cờ: **boot**
+
+6. Tạo một phân vùng khác cho **root**:
+   - ##### Kích thước: Tối thiểu **20000MiB**
+   - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+   - ##### Điểm gắn kết: **/**
+   - ##### Cờ:
+
+7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến **/boot**
+
+8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+
+9. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
+
+10. Thiết lập thông tin đăng nhập.
+
+11. Xem xét kỹ lưỡng bản tóm tắt cài đặt trên Trang Tổng quan. Tiếp tục cài đặt bằng cách nhấp vào **Cài đặt ngay** nếu mọi thứ trông đúng đắn. Nếu không, hãy quay lại và thực hiện các thay đổi cần thiết.
+
+</Steps>
+
+</TabItem>
+
+<TabItem label='Limine'>
+
+:::note
+Trong môi trường có không gian lưu trữ hạn chế, chẳng hạn như máy ảo, kích thước phân vùng /boot có thể được giảm xuống 2048MiB.
+:::
+
+<Steps>
+
+1. Khởi động vào ISO và nhấp vào nút **Launch Installer**
+
+2. Đặt **Ngôn ngữ** và **Khu vực/Múi giờ** ưa thích
+
+3. Cấu hình **Bố cục Bàn phím**
+
+4. Chọn **Phân vùng thủ công**
+
+5. Tạo một phân vùng mới với các thông số sau:
+   - ##### Kích thước: **2048MiB**
+   - ##### Hệ thống tệp: **FAT32**
+   - ##### Điểm gắn kết: **/boot**
+   - ##### Cờ: **boot**
+
+6. Tạo một phân vùng khác cho **root**:
+   - ##### Kích thước: Tối thiểu **20000MiB**
+   - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+   - ##### Điểm gắn kết: **/**
+   - ##### Cờ:
+
+7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến **/boot**
+
+8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+
+9. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
+
+10. Thiết lập thông tin đăng nhập.
+
+11. Xem xét kỹ lưỡng bản tóm tắt cài đặt trên Trang Tổng quan. Tiếp tục cài đặt bằng cách nhấp vào **Cài đặt ngay** nếu mọi thứ trông đúng đắn. Nếu không, hãy quay lại và thực hiện các thay đổi cần thiết.
+
+</Steps>
+
+</TabItem>
+
+<TabItem label='GRUB'>
+
+<Steps>
+
+1. Khởi động vào ISO và nhấp vào nút **Launch Installer**
+
+2. Đặt **Ngôn ngữ** và **Khu vực/Múi giờ** ưa thích
+
+3. Cấu hình **Bố cục Bàn phím**
+
+4. Chọn **Phân vùng thủ công**
+
+5. Tạo một phân vùng mới với các thông số sau:
+    - ##### Kích thước: Tối thiểu **100MiB**
+    - ##### Hệ thống tệp: **FAT32**
+    - ##### Điểm gắn kết: **/boot/efi**
+    - ##### Cờ: **boot**
+
+6. Tạo một phân vùng khác cho **root**:
+    - ##### Kích thước: Tối thiểu **20000MiB**
+    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+    - ##### Điểm gắn kết: **/**
+    - ##### Cờ:
+
+7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến **/boot/efi**
+
+8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+
+9. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
+
+10. Thiết lập thông tin đăng nhập.
+
+11. Xem xét kỹ lưỡng bản tóm tắt cài đặt trên Trang Tổng quan. Tiếp tục cài đặt bằng cách nhấp vào **Cài đặt ngay** nếu mọi thứ trông đúng đắn. Nếu không, hãy quay lại và thực hiện các thay đổi cần thiết.
+
+</Steps>
+
+</TabItem>
+
+</Tabs>
+
+#### MBR/BIOS
+
+<Tabs>
+
+<TabItem label='GRUB'>
+
+<Steps>
+
+1. Khởi động vào ISO và nhấp vào nút **Launch Installer**
+
+2. Đặt **Ngôn ngữ** và **Khu vực/Múi giờ** ưa thích
+
+3. Cấu hình **Bố cục Bàn phím**
+
+4. Chọn **Phân vùng thủ công**
+
+5. Tạo một phân vùng mới với các thông số sau:
+    - ##### Kích thước: Tối thiểu **20000MiB**
+    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+    - ##### Điểm gắn kết: **/**
+    - ##### Cờ:
+
+6. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến ổ đĩa khởi động của bạn, ví dụ: **/dev/sda**
+
+7. Chọn **Môi trường Desktop** bạn muốn sử dụng, xem [Môi trường Desktop](/installation/desktop_environments).
+
+8. Chọn các gói cụ thể bạn muốn cài đặt từ danh sách được cung cấp, và bỏ chọn những gì bạn không cần.
+
+9. Thiết lập thông tin đăng nhập.
+
+10. Xem xét kỹ lưỡng bản tóm tắt cài đặt trên Trang Tổng quan. Nếu tất cả cài đặt trông đúng với bạn, hãy tiếp tục cài đặt bằng cách nhấp vào **Cài đặt ngay**. Nếu không, hãy quay lại và thực hiện các thay đổi cần thiết.
+
+</Steps>
+
+</TabItem>
+
+<TabItem label='Limine'>
+
+:::note
+Trong môi trường có không gian lưu trữ hạn chế, chẳng hạn như máy ảo, kích thước phân vùng /boot có thể được giảm xuống 2048MiB.
+:::
+
+<Steps>
+
+1. Khởi động vào ISO và nhấp vào nút **Launch Installer**
+
+2. Đặt **Ngôn ngữ** và **Khu vực/Múi giờ** ưa thích
+
+3. Cấu hình **Bố cục Bàn phím**
+
+4. Chọn **Phân vùng thủ công**
+
+5. Tạo một phân vùng mới với các thông số sau:
+    - ##### Kích thước: Tối thiểu **2048MiB**
+    - ##### Hệ thống tệp: **FAT32**
+    - ##### Điểm gắn kết: **/boot**
+    - ##### Cờ: **boot**
+
+6. Tạo một phân vùng khác cho **root**:
+    - ##### Kích thước: Tối thiểu **20000MiB**
+    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+    - ##### Điểm gắn kết: **/**
+    - ##### Cờ:
+
+7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến ổ đĩa khởi động của bạn, ví dụ: **/dev/sda**
+
+8. Chọn **Môi trường Desktop** bạn muốn sử dụng, xem [Môi trường Desktop](/installation/desktop_environments).
+
+9. Chọn các gói cụ thể bạn muốn cài đặt từ danh sách được cung cấp, và bỏ chọn những gì bạn không cần.
+
+10. Thiết lập thông tin đăng nhập.
+
+11. Xem xét kỹ lưỡng bản tóm tắt cài đặt trên Trang Tổng quan. Nếu tất cả cài đặt trông đúng với bạn, hãy tiếp tục cài đặt bằng cách nhấp vào **Cài đặt ngay**. Nếu không, hãy quay lại và thực hiện các thay đổi cần thiết.
+
+</Steps>
+
+</TabItem>
+
+</Tabs>
+
+### Xóa Đĩa
+
+Tùy chọn "Xóa Đĩa" trong Calamares sẽ xóa sạch đĩa đã chọn và cài đặt CachyOS vào mục tiêu.
+
+<Steps>
+
+1. Khởi động vào ISO và nhấp vào **Launch Installer**
+
+2. Chọn **Trình quản lý Khởi động** ưa thích. Kiểm tra phần [Trình quản lý Khởi động](/installation/boot_managers) để biết thêm thông tin.
+
+3. Đặt **Ngôn ngữ** và **Khu vực/Múi giờ** ưa thích
+
+4. Cấu hình **Bố cục Bàn phím**
+
+5. Chọn **Xóa Đĩa** và chọn [Hệ thống tệp](/installation/filesystem).
+
+6. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+
+7. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
+
+8. Thiết lập thông tin đăng nhập.
+
+9. Xem xét kỹ lưỡng bản tóm tắt cài đặt trên Trang Tổng quan. Tiếp tục cài đặt bằng cách nhấp vào **Cài đặt ngay** nếu mọi thứ trông đúng đắn. Nếu không, hãy quay lại và thực hiện các thay đổi cần thiết.
+
+</Steps>
+
+## Khởi động kép Windows và CachyOS
+
+:::note[Hướng dẫn này giả định rằng Windows đã được cài đặt trên hệ thống và bạn quyết định cài đặt CachyOS cùng với nó trên cùng một ổ đĩa.]
+:::
+
+:::caution
+Việc khởi động kép Windows và Linux không đáng tin cậy 100%. Các bản cập nhật Windows có thể làm hỏng trình quản lý khởi động bằng cách ghi đè phân vùng EFI.
+Trong một số trường hợp, vấn đề có thể không bao giờ xảy ra, nhưng đối với một số người dùng, đây có thể là một vấn đề lặp đi lặp lại.
+
+Một cách để tránh vấn đề này là cài đặt mỗi hệ điều hành trên các ổ đĩa riêng biệt.
+:::
+
+- Điều kiện tiên quyết
+
+- Tắt Khởi động Nhanh và Chế độ Ngủ đông của Windows
+  - Mở Windows Powershell với quyền Quản trị viên và thực hiện lệnh sau:
+      ```ps
+      powercfg /H off
+      ```
+    Khởi động lại hệ thống để đảm bảo các thay đổi có hiệu lực.
+- BitLocker của Windows phải được tắt
+  - Kiểm tra xem BitLocker có được bật hay không:
+    ```ps title='Mở Command Prompt với quyền quản trị viên và thực hiện lệnh sau'
+    manage-bde -status
+    ```
+  Nếu Phương pháp Mã hóa hiển thị là `None`, thì BitLocker đã bị tắt.
+- Secure Boot phải được tắt.
+- Một phân vùng trống +30GB
+  - Hướng dẫn về cách thu nhỏ phân vùng Windows:
+    - Nhấn `Win + R`, gõ `diskmgmt.msc`, và nhấn Enter để mở Quản lý Đĩa.
+    - Xác định phân vùng Windows chính (thường là C:) và nhấp chuột phải vào nó.
+    - Nhấp vào `Shrink Volume...` và chỉ định tối thiểu **30720MB** (30GB) và nhấp vào `Shrink`.
+- USB khởi động được với CachyOS
+  - Tham khảo phần [Tạo Ổ đĩa USB Khởi động CachyOS](/installation/installation_prepare#creating-a-bootable-cachyos-usb-drive).
+
+<Tabs>
+    <TabItem label='systemd-boot'>
+        **Chúng ta cần sao chép các tệp nhị phân EFI của Windows vào phân vùng EFI của Linux để trình quản lý khởi động có thể nhận ra chúng.**
+
+        <Steps>
+        1. Xác định vị trí **phân vùng EFI của Windows** với `lsblk`
+
+            ```sh title='Thực hiện lệnh này trong terminal'
+            lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT
+            ```
+            ```sh title='Đầu ra ví dụ'
+                        NAME        FSTYPE   SIZE MOUNTPOINT
+            zram0               15.3G [SWAP]
+            nvme0n1            476.9G
+            ├─nvme0n1p1 vfat     100M
+            ├─nvme0n1p2           16M
+            ├─nvme0n1p3 ntfs   234.4G
+            ├─nvme0n1p4 ntfs     830M
+            ├─nvme0n1p5 vfat       2G /boot
+            └─nvme0n1p6 btrfs  239.6G /var/tmp
+            ```
+            Phân vùng EFI hầu như luôn được định dạng là `FAT32/vfat`. Vì `nvme0n1p1` không có điểm gắn kết Linux, chúng ta có thể giả định rằng phân vùng này là phân vùng EFI của Windows.
+
+        2. Gắn kết tạm thời phân vùng EFI của Windows
+
+            ```sh
+            sudo mkdir /mnt/WinBoot
+            sudo mount /dev/nvme0n1p1 /mnt/WinBoot # Thay thế `nvme0n1p1` bằng tên của phân vùng EFI Windows.
+            ```
+
+        3. Sao chép các tệp nhị phân EFI từ **phân vùng EFI của Windows** vào **phân vùng EFI của Linux**:
+
+            ```sh
+            sudo cp -r /mnt/WinBoot/EFI/Microsoft/ /boot/EFI
+            ```
+
+        4. Gỡ kết nối phân vùng đã gắn kết trước đó, và Windows sẽ xuất hiện trong menu khởi động khi khởi động lần tiếp theo.
+
+            ```sh
+            sudo umount /mnt/WinBoot
+            sudo rm -r /mnt/WinBoot
+            ```
+
+        </Steps>
+    </TabItem>
+
+    <TabItem label='GRUB'>
+        **GRUB sử dụng os-prober để tự động phát hiện phân vùng EFI của Windows và thêm nó vào menu khởi động.**
+
+        <Steps>
+        1. Cài đặt và thực thi **os-prober**
+
+            ```sh
+            sudo pacman -S os-prober
+            sudo os-prober
+            ```
+
+        2. Bật **os-prober** trong tệp cấu hình GRUB
+
+            ```sh title='Nhấn CTRL+S để lưu và CTRL+Q để thoát khỏi Micro'
+            sudo micro /etc/default/grub
+            # /etc/default/grub
+            # Probing for other operating systems is disabled for security reasons. Read
+            # documentation on GRUB_DISABLE_OS_PROBER, if still want to enable this
+            # functionality install os-prober and uncomment to detect and include other
+            # operating systems.
+            GRUB_DISABLE_OS_PROBER=false
+
+            sudo grub-mkconfig -o /boot/grub/grub.cfg
+            ```
+
+            **Windows bây giờ sẽ được thêm vào menu khởi động.**
+
+        </Steps>
+    </TabItem>
+</Tabs>

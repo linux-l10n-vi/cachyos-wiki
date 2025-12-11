@@ -1,0 +1,70 @@
+---
+title: Phiên bản Handheld
+description: Cách cài đặt CachyOS trên các Thiết bị Cầm tay
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+CachyOS cung cấp một phiên bản cho các handheld, chẳng hạn như Steam Deck, ROG Ally, và Legion Go. Phiên bản này mang lại trải nghiệm giống như SteamOS với việc chuyển đổi Chế độ Game, các Ứng dụng Game được cài đặt sẵn, và nhiều hơn nữa.
+
+Phiên bản Handheld sử dụng trình lập lịch LAVD làm trình lập lịch CPU mặc định, được tối ưu hóa cho các handheld. Điều này dẫn đến cải thiện tốc độ khung hình và tuổi thọ pin trong khi chơi game.
+
+Phiên bản Handheld sử dụng `systemd-boot` làm trình quản lý khởi động. Việc chọn trình quản lý khởi động không có sẵn
+khác với ISO CachyOS mặc định. Điều này nhằm đơn giản hóa quá trình cài đặt.
+
+:::note[KDE Plasma là môi trường desktop duy nhất được hỗ trợ cho Phiên bản Handheld.]
+:::
+
+## Cài đặt trên Root
+
+<Steps>
+
+1. **Tải xuống** ISO Handheld mới nhất từ trang web/diễn đàn.
+
+2. [Flash](/installation/installation_prepare) ISO.
+
+3. **Khởi động** vào ISO.
+
+4. Nhấp vào nút **Khởi động Trình cài đặt**.
+
+5. Calamares bây giờ sẽ mở. Hãy làm theo hướng dẫn trên màn hình.
+
+6. Tại bước phân vùng, vui lòng sử dụng tùy chọn **Xóa Đĩa**. Nếu bạn đến từ một bản phân phối Linux khác, nó có thể đã sử dụng bố cục phân vùng khác. Hãy nhận thức rằng tùy chọn thay thế phân vùng có thể gây vấn đề và có thể không hoạt động như mong đợi.
+
+7. Cài đặt Hệ thống.
+
+</Steps>
+
+Sau khi cài đặt hoàn tất. Calamares sẽ nhắc bạn khởi động lại thiết bị.
+
+Lần khởi động đầu tiên có thể mất một chút thời gian, vì Steam đang được tải xuống và khởi động.
+Quá trình này có thể mất đến 2 phút.
+
+
+## Cài đặt với Khởi động kép
+
+<Steps>
+
+1. **Tải xuống** ISO Handheld mới nhất từ trang web/diễn đàn.
+
+2. [Flash](/installation/installation_prepare) ISO.
+
+3. **Khởi động** vào ISO.
+
+4. Nhấp vào nút **Khởi động Trình cài đặt**.
+
+5. Calamares bây giờ sẽ mở. Hãy làm theo hướng dẫn trên màn hình.
+
+6. Tại bước phân vùng bạn cần chọn **Phân vùng Thủ công** và tạo các phân vùng sau:
+
+    - 2GB /boot
+    - XGB / (X có thể là bất kỳ số không gian lưu trữ bạn muốn phân bổ cho hệ thống tệp root)
+
+7. Tiếp tục với các bước và cài đặt hệ thống.
+
+</Steps>
+
+Sau khi cài đặt hoàn tất, Calamares sẽ nhắc bạn khởi động lại thiết bị.
+
+Lần khởi động đầu tiên có thể mất một chút thời gian, vì Steam đang được tải xuống và khởi động.
+Quá trình này có thể mất đến 2 phút.

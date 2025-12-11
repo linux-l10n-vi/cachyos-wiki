@@ -1,0 +1,140 @@
+---
+title: MacBook T2
+description: Cách cài đặt CachyOS trên MacBook T2
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+CachyOS cung cấp hỗ trợ đột phá cho MacBook T2, bao gồm các bản vá kernel cần thiết trong tất cả các kernel được cung cấp. Tuy nhiên, có các bước quan trọng cần thiết để đảm bảo một thiết lập thành công.
+
+:::caution[Rủi ro Tiềm ẩn]
+Việc gỡ bỏ hoàn toàn macOS mang theo rủi ro, như mất dữ liệu hoặc làm cho thiết bị không thể sử dụng được. **Khuyến nghị mạnh mẽ** giữ lại phân vùng macOS để cập nhật firmware và khôi phục. Tham khảo [Lộ trình T2 Linux](https://wiki.t2linux.org/roadmap/#can-i-completely-remove-macos) để biết chi tiết.
+
+Nếu bạn vẫn quyết định gỡ bỏ macOS, hãy đảm bảo bạn có bản sao lưu đầy đủ và tạo một [trình cài đặt macOS khởi động được](https://support.apple.com/en-us/101578) trước đó.
+:::
+
+## Trước khi Cài đặt
+
+Việc tạo một trình cài đặt macOS khởi động được là tùy chọn nhưng được khuyến nghị nếu bạn có kế hoạch sửa đổi phân vùng hoặc gỡ bỏ macOS. Nó có thể hữu ích cho việc cập nhật firmware, khắc phục sự cố, hoặc khôi phục hệ thống. Để biết hướng dẫn chi tiết, tham khảo [hướng dẫn của Apple](https://support.apple.com/en-us/101578).
+
+Thực hiện các bước này trong macOS **trước khi** khởi động trình cài đặt CachyOS.
+
+### Chuẩn bị USB Khởi động CachyOS
+
+Tải xuống [ISO CachyOS](/cachyos_basic/download) và làm theo hướng dẫn trong [Tạo Ổ đĩa USB Khởi động CachyOS](/installation/installation_prepare#creating-a-bootable-cachyos-usb-drive) để tạo phương tiện cài đặt.
+
+### (Tùy chọn) Trích xuất Firmware Wi-Fi
+
+:::note
+Wi-Fi **sẽ không hoạt động** một cách đột phá hoặc sau khi cài đặt vì firmware cần thiết là độc quyền và không thể được phân phối lại bởi CachyOS. Bạn sẽ cần kết nối internet (ví dụ, Ethernet, chia sẻ USB) cho quá trình cài đặt trừ khi bạn làm theo các bước dưới đây để chuẩn bị firmware Wi-Fi trước đó và kích hoạt nó trong quá trình cài đặt.
+:::
+
+Trong khi vẫn ở macOS, mở Terminal và chạy lệnh sau. Điều này sao chép các tệp firmware Wi-Fi cần thiết vào phân vùng EFI của bạn, làm cho chúng có thể truy cập được sau này trong quá trình cài đặt CachyOS.
+```sh
+curl -sL https://wiki.t2linux.org/tools/firmware.sh | bash -s copy_to_efi
+```
+
+### Chuẩn bị Đĩa của bạn
+
+Nếu bạn có kế hoạch khởi động kép với macOS (được khuyến nghị), bạn cần tạo không gian cho CachyOS. Sử dụng ứng dụng Disk Utility trong macOS để thay đổi kích thước phân vùng macOS hiện có của bạn:
+
+<Steps>
+
+1.  Mở **Disk Utility**.
+2.  Trong thanh bên của Disk Utility, chọn **khối lượng** bạn muốn thay đổi kích thước (thường được đặt tên "Macintosh HD" hoặc tương tự).
+3.  Nhấp vào nút **"Partition"** trong thanh công cụ.
+4.  Nhấp vào nút **"+" (dấu cộng)** bên dưới biểu đồ tròn biểu thị việc sử dụng đĩa của bạn.
+5.  **Quan trọng**, khi được nhắc, chọn **"Add Partition"**, *không phải* "Add Volume". Bạn cần tạo một phân vùng riêng cho Linux.
+6.  **Name:** Nhập một tên mô tả cho phân vùng mới (ví dụ, "CachyOS" hoặc "Linux").
+7.  **Format:** Chọn bất kỳ định dạng có sẵn (như APFS hoặc Mac OS Extended). Trình cài đặt CachyOS sẽ định dạng lại phân vùng này sau, vì vậy lựa chọn ban đầu không quan trọng.
+8.  **Size:** Phân bổ lượng không gian lưu trữ mong muốn cho CachyOS. **Hãy aware rằng việc thay đổi kích thước phân vùng sau có thể khó hoặc không thể**, vì vậy hãy chọn kích thước đáp ứng nhu cầu của bạn.
+9. Nhấp vào **"Apply"** để tạo phân vùng mới. Disk Utility sẽ thay đổi kích thước phân vùng macOS của bạn và tạo không gian trống mới.
+
+</Steps>
+
+
+### Tắt Secure Boot
+
+<Steps>
+
+1. Khởi động lại Mac của bạn và giữ `Command (⌘) + R` ngay sau khi bật nguồn để vào Chế độ Khôi phục.
+2. Đi đến Utilities > Startup Security Utility.
+3. Chọn "No Security" dưới **Secure Boot** và "Allow booting from external or removable media" dưới **Allowed Boot Media**.
+
+</Steps>
+
+Tham khảo [hướng dẫn của Apple về Startup Security Utility](https://support.apple.com/en-in/102522) để biết thêm chi tiết.
+
+---
+
+Để có tổng quan thêm về việc chuẩn bị Mac T2 cho Linux, tham khảo [hướng dẫn cài đặt trước t2linux](https://wiki.t2linux.org/guides/preinstall/).
+
+## Quá trình Cài đặt
+
+<Steps>
+
+1.  **Khởi động từ USB CachyOS:**
+    *   Khởi động lại Mac của bạn và giữ phím `Option (⌥)` ngay sau khi bật nguồn.
+    *   Chọn ổ đĩa USB CachyOS (thường được dán nhãn là "EFI Boot").
+2.  **(Tùy chọn) Kích hoạt Wi-Fi trong Môi trường Live:**
+    *   Nếu bạn cần Wi-Fi trong quá trình cài đặt và không có Ethernet/chia sẻ USB, mở terminal một khi môi trường live CachyOS tải xong.
+    *   Chạy các lệnh này để sao chép firmware từ phân vùng EFI (được tạo trong [Trích xuất Firmware Wi-Fi](#optional-extract-wi-fi-firmware)) và cấu hình NetworkManager:
+        ```sh
+        # Gắn kết phân vùng EFI (thường là nvme0n1p1 trên Mac T2)
+        sudo mkdir -p /tmp/apple-wifi-efi
+        sudo mount /dev/nvme0n1p1 /tmp/apple-wifi-efi
+
+        # Sao chép firmware từ EFI vào môi trường live
+        bash /tmp/apple-wifi-efi/firmware.sh get_from_efi
+        sudo umount /tmp/apple-wifi-efi
+
+        # Cấu hình NetworkManager để sử dụng backend iwd
+        cat <<EOF | sudo tee /etc/NetworkManager/conf.d/wifi_backend.conf
+        [device]
+        wifi.backend=iwd
+        EOF
+        sudo systemctl restart NetworkManager
+        ```
+    *   Bây giờ bạn nên có thể kết nối với các mạng Wi-Fi bằng cách sử dụng applet mạng trong khay hệ thống.
+3.  **Chạy Trình cài đặt CachyOS:**
+    *   Khởi động trình cài đặt CachyOS từ menu desktop hoặc ứng dụng.
+    *   Làm theo quy trình cài đặt tiêu chuẩn, tham khảo hướng dẫn [Cài đặt trên Root](/installation/installation_on_root).
+    *   Khi phân vùng, chọn không gian trống đã tạo trước đó. Để trình cài đặt xử lý việc định dạng.
+        :::caution[Cảnh báo Phân vùng]
+        Hãy **rất cẩn thận** trong bước phân vùng trong trình cài đặt. Đảm bảo bạn đang chọn không gian trống đúng đã chuẩn bị và **không** vô tình xóa hoặc định dạng phân vùng macOS hiện có, đặc biệt nếu bạn có kế hoạch khởi động kép. Kiểm tra lại các lựa chọn của bạn trước khi tiếp tục.
+        :::
+    *   Phát hiện Phần cứng CachyOS ([chwd](/features/chwd)) nên tự động áp dụng các tham số khởi động và cấu hình cụ thể T2 cần thiết trong quá trình cài đặt.
+
+</Steps>
+
+## Các bước Sau khi Cài đặt
+
+Sau khi cài đặt hoàn tất và bạn đã khởi động lại vào hệ thống CachyOS mới của mình, bạn có thể cần thực hiện một vài bước bổ sung để đảm bảo mọi thứ hoạt động trơn tru.
+
+### Cài đặt Firmware Wi-Fi Vĩnh viễn
+
+Nếu bạn đã làm theo tùy chọn [Kích hoạt Wi-Fi trong Môi trường Live](#installation-process) để lấy firmware trong ISO live, bạn có thể đơn giản làm theo nó lại để kích hoạt Wi-Fi. Nếu không, hãy kết nối với internet (ví dụ, Ethernet, chia sẻ USB) và làm theo các bước dưới đây:
+
+<Steps>
+1. Mở một terminal và tải xuống gói firmware từ mirror Arch Linux T2:
+   ```sh
+   curl https://mirror.funami.tech/arch-mact2/os/x86_64/apple-bcm-firmware-14.0-1-any.pkg.tar.zst -o apple-bcm-firmware-14.0-1-any.pkg.tar.zst
+   ```
+2. Cài đặt gói đã tải xuống:
+   ```sh
+   sudo pacman -U apple-bcm-firmware-14.0-1-any.pkg.tar.zst
+   ```
+3. Tải lại các mô-đun kernel Wi-Fi:
+   ```bash
+   sudo modprobe -r brcmfmac_wcc
+   sudo modprobe -r brcmfmac
+   sudo modprobe brcmfmac
+   ```
+
+</Steps>
+
+Wi-Fi bây giờ nên hoạt động đáng tin cậy sau các lần khởi động lại. Bạn có thể xóa tệp `.pkg.tar.zst` đã tải xuống.
+
+### Cấu hình Thêm
+
+Để cấu hình các thành phần phần cứng khác như âm thanh, webcam, Touch Bar, v.v., tham khảo các hướng dẫn khác nhau trên [Wiki t2linux](https://wiki.t2linux.org/roadmap/#configuring-the-installation).

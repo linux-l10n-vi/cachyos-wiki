@@ -1,0 +1,75 @@
+---
+title: Môi trường Desktop
+description: Các Môi trường Desktop được cung cấp bởi CachyOS
+---
+
+import ImageComponent from '~/components/image-component.astro';
+import MultipleImageComponent from '~/components/multiple-images-component.astro';
+
+CachyOS cung cấp nhiều môi trường desktop để bạn lựa chọn.
+
+Quyết định này dựa trên sở thích cá nhân. Hãy chọn một môi trường mà bạn thích nhất.
+:::note
+Vui lòng chỉ chọn một Môi trường Desktop trong quá trình cài đặt.
+:::
+
+Các tùy chọn có sẵn là:
+
+1. **KDE Plasma:** một môi trường desktop toàn diện và linh hoạt cung cấp nhiều kiểu menu để truy cập ứng dụng. Nó có trình quản lý cửa sổ KWin. KDE Plasma cũng tự hào có một giao diện trực quan cho phép bạn dễ dàng tải xuống và cài đặt các chủ đề, widget và nhiều thứ khác từ web.
+2. **Niri:** là một compositor Wayland xếp lát có thể cuộn, nhấn mạnh sự đơn giản và quản lý cửa sổ mượt mà. Nó sử dụng bố cục lưới liên tục, được tối ưu hóa cho cả điều hướng bàn phím và touchpad. Tìm các tệp cấu hình Niri [dotfiles](https://github.com/CachyOS/cachyos-niri-settings) của chúng tôi.
+3. **i3:** một trình quản lý cửa sổ X11 xếp lát phổ biến nổi tiếng với tệp cấu hình duy nhất, tự chứa và sử dụng không gian màn hình hiệu quả. Tìm các tệp cấu hình i3 [dotfiles](https://github.com/CachyOS/cachyos-i3wm-settings) của chúng tôi.
+4. **Qtile:** một trình quản lý cửa sổ X11/Wayland được cấu hình với ngôn ngữ lập trình Python. Cung cấp nhiều bố cục và widget. Tìm các [tệp cấu hình](https://github.com/CachyOS/cachyos-qtile-settings) của chúng tôi.
+5. **Wayfire:** một compositor Wayland dựa trên wlroots cân bằng giữa tùy chỉnh, khả năng mở rộng và thẩm mỹ. Tìm các tệp cấu hình Wayfire [dotfiles](https://github.com/CachyOS/cachyos-wayfire-settings) của chúng tôi.
+6. **GNOME:** một môi trường desktop thân thiện với người dùng với giao diện kiểu cảm ứng để truy cập ứng dụng. Mặc dù dễ học, nó có các tùy chọn tùy chỉnh hạn chế và có thể khó cấu hình.
+7. **XFCE:** một môi trường desktop nhẹ và linh hoạt với menu thả xuống/bật lên truyền thống để truy cập ứng dụng. Nó cũng tương thích với Compiz.
+8. **bspwm:** một trình quản lý cửa sổ X11 dựa trên C cung cấp các bố cục xếp lát, xếp chồng và tab linh hoạt.
+9. **Budgie:** một môi trường desktop đơn giản và thanh lịch được xây dựng sử dụng bộ công cụ GTK. Nó được thiết kế để cung cấp một giao diện hiện đại và hấp dẫn dễ sử dụng đồng thời có khả năng cấu hình cao.
+10. **Cinnamon:** một môi trường desktop cho Linux cân bằng giữa các tính năng nâng cao và trải nghiệm người dùng truyền thống.
+11. **Cosmic:** `Hiện đang ở phiên bản beta.` một môi trường desktop hiện đại, hướng đến hiệu suất được xây dựng với Rust và Smithay. Được thiết kế cho năng suất và người dùng chuyên nghiệp, nó nhằm cung cấp các tính năng nâng cao trong khi duy trì một giao diện sạch sẽ nhưng trực quan.
+12. **Hyprland:** một compositor Wayland hấp dẫn về mặt hình ảnh sử dụng xếp lát động.
+13. **LXDE** (Lightweight X11 Desktop Environment): một môi trường desktop nhanh và tiết kiệm năng lượng được thiết kế để sử dụng trên các máy tính cũ và hệ thống bị giới hạn tài nguyên. Nó sử dụng Openbox làm trình quản lý cửa sổ mặc định và tập trung vào việc cung cấp một giao diện đơn giản, sạch sẽ và thân thiện với người dùng.
+14. **LXQt:** một môi trường desktop nhẹ được hình thành từ sự hợp nhất của các dự án LXDE và Razor-qt và được xây dựng với Qt.
+15. **Mate Desktop:** một môi trường desktop truyền thống fork từ GNOME 2. Nó được đặc trưng bởi giao diện và cảm giác cổ điển, với giao diện người dùng đơn giản và trực quan. Mate cung cấp trải nghiệm desktop dễ sử dụng và có khả năng tùy chỉnh cao cho người dùng thích giao diện và cảm giác cổ điển hơn.
+16. **Openbox:** một trình quản lý cửa sổ X11 rất phổ biến nổi tiếng với tài liệu xuất sắc và nhiều chủ đề có sẵn để lựa chọn.
+17. **Sway:** một compositor Wayland xếp lát và là một thay thế trực tiếp cho trình quản lý cửa sổ i3 cho X11. Nó hoạt động với cấu hình i3 hiện có của bạn và hỗ trợ hầu hết các tính năng của i3 cùng với một vài tính năng bổ sung.
+18. **UKUI:** một môi trường desktop nhẹ hiệu quả và hoạt động tốt trên các máy tính cũ. Nó sử dụng cả công nghệ GTK và Qt, và có giao diện trực quan tương tự như Windows 7, làm cho nó thân thiện với người dùng Linux mới.
+
+## Ảnh chụp màn hình
+
+*Phần hình ảnh giới thiệu chủ đề và thiết kế của chúng tôi cho các môi trường desktop và trình quản lý cửa sổ được cung cấp.*
+
+### KDE
+> CachyOS Breeze
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/plasma-default.png')} />
+
+> Chủ đề Emerald
+
+<br />
+<MultipleImageComponent images={[import('~/assets/images/emerald1920x180guest1.png'), import('~/assets/images/emerald1920x180guest3.png'), import('~/assets/images/emerald1920x180guest4.png')]} />
+
+> Chủ đề CachyOS Nord
+
+<br />
+<MultipleImageComponent images={[import('~/assets/images/nord1920x180guest1.png'), import('~/assets/images/nord1920x180guest.png'), import('~/assets/images/nord1920x180guest2.png'), import('~/assets/images/nord1920x180guest3.png'), import('~/assets/images/nord1920x180guest4.png')]} />
+
+### i3
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/i3.png')} />
+
+### Niri
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/niri.jpg')} />
+
+### Qtile
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/qtile-desktop.png')} />
+
+### Wayfire
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/wayfire-desktop.png')} />
