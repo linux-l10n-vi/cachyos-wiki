@@ -552,13 +552,13 @@ Trình cài đặt không bị treo. Nó đang chạy một script nền cần t
 ### Khôi phục Trình quản lý Khởi động và Btrfs snapshots
 
 :::note
-Trường hợp bị xóa phân vùng /boot. Vui lòng tạo một phân vùng mới theo [lược đồ phân vùng](/installation/installation_on_root#uefigpt) tương ứng từ bước 5.
+Trường hợp bị xóa phân vùng /boot. Vui lòng tạo một phân vùng mới theo [lược đồ phân vùng](/vi/installation/installation_on_root#uefigpt) tương ứng từ bước 5.
 :::
 
 ### Các bước để khôi phục trình quản lý khởi động
 
 :::tip
-Nếu bạn không chắc chắn cách sử dụng `cachy-chroot`, vui lòng tham khảo tài liệu [Trợ giúp chroot CachyOS](/features/cachy_chroot) trước tiên.
+Nếu bạn không chắc chắn cách sử dụng `cachy-chroot`, vui lòng tham khảo tài liệu [Trợ giúp chroot CachyOS](/vi/features/cachy_chroot) trước tiên.
 :::
 
 <Steps>
@@ -847,7 +847,7 @@ Không. Các gói `-bin` là các tệp thực thi đã biên dịch trước v�
 Điều này có thể giải quyết vấn đề màn hình đen trên một số hệ thống ví dụ: với các GPU NVIDIA cũ
 :::
 
-Để vô hiệu hóa hoạt ảnh lúc khởi động, bạn cần chỉnh [cấu hình trình quản lý khởi động](/configuration/boot_manager_configuration) của mình và thêm các tham số nhân sau:
+Để vô hiệu hóa hoạt ảnh lúc khởi động, bạn cần chỉnh [cấu hình trình quản lý khởi động](/vi/configuration/boot_manager_configuration) của mình và thêm các tham số nhân sau:
 
 ```sh
 plymouth.enable=0 disablehooks=plymouth
@@ -901,4 +901,4 @@ Mặc dù các trình quản lý gói đồ họa mang lại sự tiện lợi, 
 
 Để có sự ổn định và đáng tin cậy tối đa, chúng tôi **khuyến nghị cao** quản lý các gói hệ thống thông qua dòng lệnh với `pacman`
 
-Nếu bạn thích giao diện đồ họa, các trình bao bọc dòng lệnh như **[Octopi](/configuration/post_install_setup/#updating-the-system)** hoặc **CachyOS Package Installer** được coi là các lựa chọn an toàn hơn, vì chúng là các trình bao bọc trực tiếp hơn cho chức năng của pacman.
+Nếu bạn thích giao diện đồ họa, các trình bao bọc dòng lệnh như **[Octopi](/vi/configuration/post_install_setup/#updating-the-system)** hoặc **CachyOS Package Installer** được coi là các lựa chọn an toàn hơn, vì chúng là các trình bao bọc trực tiếp hơn cho chức năng của pacman.

@@ -19,7 +19,7 @@ import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 :::
 
 :::caution[Secure Boot và CSM phải được tắt trong cài đặt BIOS/UEFI khi cài đặt ở chế độ UEFI.]
-Để thiết lập Secure Boot sau khi cài đặt, hãy tham khảo phần [Secure Boot](/configuration/secure_boot_setup).
+Để thiết lập Secure Boot sau khi cài đặt, hãy tham khảo phần [Secure Boot](/vi/configuration/secure_boot_setup).
 
 `Legacy USB Support` nên được đặt thành `Auto`
 :::
@@ -47,7 +47,7 @@ Nếu không, các lỗi liên tục có thể xảy ra trong quá trình cài �
     ```sh title='Thực hiện lệnh này trong terminal'
     efibootmgr -v
     ```
-Nếu kết quả là: `EFI variables are not supported on this system.` Thì hệ thống đang khởi động ở chế độ Legacy/BIOS và bạn cần đảm bảo chế độ UEFI được cấu hình trong cài đặt BIOS/UEFI. Tham khảo **[Phần Yêu cầu](/installation/installation_on_root#_top).**
+Nếu kết quả là: `EFI variables are not supported on this system.` Thì hệ thống đang khởi động ở chế độ Legacy/BIOS và bạn cần đảm bảo chế độ UEFI được cấu hình trong cài đặt BIOS/UEFI. Tham khảo **[Phần Yêu cầu](/vi/installation/installation_on_root#_top).**
 :::
 
 #### UEFI/GPT
@@ -76,13 +76,13 @@ Bảng phân vùng cho mỗi trình quản lý khởi động khác nhau. Vui l�
 
 6. Tạo một phân vùng khác cho **root**:
    - ##### Kích thước: Tối thiểu **20000MiB**
-   - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+   - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/vi/installation/filesystem)
    - ##### Điểm gắn kết: **/**
    - ##### Cờ:
 
 7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến **/boot**
 
-8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/vi/installation/desktop_environments).
 
 9. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
 
@@ -118,13 +118,13 @@ Trong môi trường có không gian lưu trữ hạn chế, chẳng hạn như 
 
 6. Tạo một phân vùng khác cho **root**:
    - ##### Kích thước: Tối thiểu **20000MiB**
-   - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+   - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/vi/installation/filesystem)
    - ##### Điểm gắn kết: **/**
    - ##### Cờ:
 
 7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến **/boot**
 
-8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/vi/installation/desktop_environments).
 
 9. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
 
@@ -156,13 +156,13 @@ Trong môi trường có không gian lưu trữ hạn chế, chẳng hạn như 
 
 6. Tạo một phân vùng khác cho **root**:
     - ##### Kích thước: Tối thiểu **20000MiB**
-    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/vi/installation/filesystem)
     - ##### Điểm gắn kết: **/**
     - ##### Cờ:
 
 7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến **/boot/efi**
 
-8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+8. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/vi/installation/desktop_environments).
 
 9. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
 
@@ -194,13 +194,13 @@ Trong môi trường có không gian lưu trữ hạn chế, chẳng hạn như 
 
 5. Tạo một phân vùng mới với các thông số sau:
     - ##### Kích thước: Tối thiểu **20000MiB**
-    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/vi/installation/filesystem)
     - ##### Điểm gắn kết: **/**
     - ##### Cờ:
 
 6. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến ổ đĩa khởi động của bạn, ví dụ: **/dev/sda**
 
-7. Chọn **Môi trường Desktop** bạn muốn sử dụng, xem [Môi trường Desktop](/installation/desktop_environments).
+7. Chọn **Môi trường Desktop** bạn muốn sử dụng, xem [Môi trường Desktop](/vi/installation/desktop_environments).
 
 8. Chọn các gói cụ thể bạn muốn cài đặt từ danh sách được cung cấp, và bỏ chọn những gì bạn không cần.
 
@@ -236,13 +236,13 @@ Trong môi trường có không gian lưu trữ hạn chế, chẳng hạn như 
 
 6. Tạo một phân vùng khác cho **root**:
     - ##### Kích thước: Tối thiểu **20000MiB**
-    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/installation/filesystem)
+    - ##### Hệ thống tệp: **Bất kỳ**, tham khảo [Hệ thống tệp](/vi/installation/filesystem)
     - ##### Điểm gắn kết: **/**
     - ##### Cờ:
 
 7. Kiểm tra lại rằng **Cài đặt trình quản lý khởi động trên:** đang trỏ đến ổ đĩa khởi động của bạn, ví dụ: **/dev/sda**
 
-8. Chọn **Môi trường Desktop** bạn muốn sử dụng, xem [Môi trường Desktop](/installation/desktop_environments).
+8. Chọn **Môi trường Desktop** bạn muốn sử dụng, xem [Môi trường Desktop](/vi/installation/desktop_environments).
 
 9. Chọn các gói cụ thể bạn muốn cài đặt từ danh sách được cung cấp, và bỏ chọn những gì bạn không cần.
 
@@ -264,15 +264,15 @@ Tùy chọn "Xóa Đĩa" trong Calamares sẽ xóa sạch đĩa đã chọn và 
 
 1. Khởi động vào ISO và nhấp vào **Launch Installer**
 
-2. Chọn **Trình quản lý Khởi động** ưa thích. Kiểm tra phần [Trình quản lý Khởi động](/installation/boot_managers) để biết thêm thông tin.
+2. Chọn **Trình quản lý Khởi động** ưa thích. Kiểm tra phần [Trình quản lý Khởi động](/vi/installation/boot_managers) để biết thêm thông tin.
 
 3. Đặt **Ngôn ngữ** và **Khu vực/Múi giờ** ưa thích
 
 4. Cấu hình **Bố cục Bàn phím**
 
-5. Chọn **Xóa Đĩa** và chọn [Hệ thống tệp](/installation/filesystem).
+5. Chọn **Xóa Đĩa** và chọn [Hệ thống tệp](/vi/installation/filesystem).
 
-6. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/installation/desktop_environments).
+6. Chọn **Môi trường Desktop** mong muốn, xem [Môi trường Desktop](/vi/installation/desktop_environments).
 
 7. Tùy chỉnh các gói nên hoặc không nên được cài đặt trong quá trình cài đặt.
 
@@ -315,7 +315,7 @@ Một cách để tránh vấn đề này là cài đặt mỗi hệ điều hà
     - Xác định phân vùng Windows chính (thường là C:) và nhấp chuột phải vào nó.
     - Nhấp vào `Shrink Volume...` và chỉ định tối thiểu **30720MB** (30GB) và nhấp vào `Shrink`.
 - USB khởi động được với CachyOS
-  - Tham khảo phần [Tạo Ổ đĩa USB Khởi động CachyOS](/installation/installation_prepare#creating-a-bootable-cachyos-usb-drive).
+  - Tham khảo phần [Tạo Ổ đĩa USB Khởi động CachyOS](/vi/installation/installation_prepare#creating-a-bootable-cachyos-usb-drive).
 
 <Tabs>
     <TabItem label='systemd-boot'>

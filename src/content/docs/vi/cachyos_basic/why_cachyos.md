@@ -14,13 +14,13 @@ CachyOS là một bản phân phối Arch Linux tập trung vào hiệu suất, 
 
 CachyOS cung cấp một lựa chọn lớn các **[gói đã tối ưu hóa](https://packages.cachyos.org/)** được biên dịch cụ thể cho các kiến trúc CPU hiện đại. Điều này bao gồm hỗ trợ cho các hệ thống `x86-64-v3`, `x86-64-v4`, và `Zen4+`, đảm bảo rằng phần mềm của bạn được xây dựng để tận dụng tối đa các khả năng của phần cứng để tăng hiệu suất đáng kể.
 
-Để có cái nhìn sâu hơn về các kho lưu trữ đã tối ưu hóa của chúng tôi, xem hướng dẫn chi tiết của chúng tôi về **[Kho lưu trữ đã Tối ưu hóa](/features/optimized_repos)**.
+Để có cái nhìn sâu hơn về các kho lưu trữ đã tối ưu hóa của chúng tôi, xem hướng dẫn chi tiết của chúng tôi về **[Kho lưu trữ đã Tối ưu hóa](/vi/features/optimized_repos)**.
 
 ### Nhân Tùy chỉnh cho Hiệu suất và Ổn định
 
 Ngoài bộ vá nhân cơ bản của CachyOS điều chỉnh các tham số nhân khác nhau để cải thiện độ phản hồi của desktop, CachyOS chọn lọc các bộ vá chưa được đưa vào mainline hoặc không được bao gồm trong bản sửa đổi ổn định của nhân.
 
-Do đó, các bản vá này trải qua kiểm thử nội bộ trước khi được phát hành cho người dùng để đảm bảo rằng sự ổn định không bị ảnh hưởng. Để có danh sách đầy đủ các bản vá mà CachyOS cung cấp, xem [Nhân](/features/kernel).
+Do đó, các bản vá này trải qua kiểm thử nội bộ trước khi được phát hành cho người dùng để đảm bảo rằng sự ổn định không bị ảnh hưởng. Để có danh sách đầy đủ các bản vá mà CachyOS cung cấp, xem [Nhân](/vi/features/kernel).
 
 ### Hỗ trợ Bộ lập lịch CPU Tiên tiến
 
@@ -30,11 +30,11 @@ CachyOS phân phối các nhân với các tối ưu hóa bộ lập lịch CPU 
 
 * **[BORE](https://github.com/firelzrd/bore-scheduler) (Burst-Oriented Response Enhancer):** Đối với người dùng cần tối đa tính tương tác, các nhân của chúng tôi hỗ trợ bộ lập lịch BORE, một bộ vá mà nó cải thiện EEVDF để cung cấp một trải nghiệm mượt mà hơn trong các khối lượng công việc chuyên sâu.
 
-Để biết thêm thông tin về các nhân được cung cấp bởi CachyOS và sched-ext, xem tài liệu **[Nhân](/features/kernel)** và **[sched-ext](/configuration/sched-ext)**.
+Để biết thêm thông tin về các nhân được cung cấp bởi CachyOS và sched-ext, xem tài liệu **[Nhân](/vi/features/kernel)** và **[sched-ext](/vi/configuration/sched-ext)**.
 
 ## Công cụ Thân thiện với Người dùng và Tùy chỉnh
 
-### [Phát hiện Phần cứng Tự động](/features/chwd/chwd/)
+### [Phát hiện Phần cứng Tự động](/vi/features/chwd/chwd/)
 
 CachyOS bao gồm một công cụ phát hiện phần cứng tùy chỉnh tự động nhận dạng và cài đặt các driver và gói cần thiết cho hệ thống của bạn. Điều này loại bỏ nhu cầu tìm kiếm driver thủ công, tiết kiệm thời gian và công sức của bạn sau khi cài đặt.
 
@@ -42,10 +42,10 @@ CachyOS bao gồm một công cụ phát hiện phần cứng tùy chỉnh tự 
 
 Trình cài đặt CachyOS cho phép người dùng tùy chỉnh hệ thống của họ bằng cách chọn môi trường desktop, gói, hệ thống tệp, trình quản lý khởi động, nhân và nhiều hơn để phù hợp với nhu cầu của họ:
 
-- [Môi trường Desktop](/installation/desktop_environments/)
-- [Trình quản lý Khởi động](/installation/boot_managers/)
-- [Các biến thể Nhân](/features/kernel#variants)
-- [Hệ thống tệp](/installation/filesystem)
+- [Môi trường Desktop](/vi/installation/desktop_environments/)
+- [Trình quản lý Khởi động](/vi/installation/boot_managers/)
+- [Các biến thể Nhân](/vi/features/kernel#variants)
+- [Hệ thống tệp](/vi/installation/filesystem)
 - [Các gói tùy chỉnh để bao gồm trong quá trình cài đặt](https://github.com/CachyOS/cachyos-calamares/blob/cachyos-limine-qt6/src/modules/netinstall/netinstall.yaml)
 
 ### Các ứng dụng Tùy chỉnh của CachyOS
