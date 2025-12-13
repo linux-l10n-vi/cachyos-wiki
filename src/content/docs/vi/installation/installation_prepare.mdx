@@ -1,0 +1,217 @@
+---
+title: Các bước Chuẩn bị
+description: Cách chuẩn bị CachyOS để cài đặt
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+import ImageComponent from '~/components/image-component.astro';
+
+## Yêu cầu Hệ thống
+
+Trước khi chuẩn bị cài đặt, hãy chắc chắn rằng máy tính được sử dụng đáp ứng yêu cầu hệ thống tối thiểu để chạy CachyOS. Trình cài đặt
+sử dụng quy trình cài đặt trực tuyến nên kết nối internet ổn định và tương đối nhanh là bắt buộc.
+
+:::note[Máy ảo]
+Không khuyến nghị cài đặt CachyOS trên máy ảo. Máy ảo có thể gặp vấn đề với cấu hình sai hoặc có thể bị hỏng hoàn toàn. Khuyến nghị cài đặt CachyOS trên máy vật lý.
+:::
+
+<Tabs>
+
+<TabItem label="Yêu cầu tối thiểu">
+
+*   3 GB RAM
+*   30 GB Không gian Lưu trữ (HDD/SSD)
+*   Kết nối internet ổn định
+
+:::caution
+Internet không ổn định có thể dẫn đến thời gian cài đặt kéo dài hoặc cài đặt thất bại trong trường hợp xấu nhất.
+:::
+
+</TabItem>
+
+<TabItem label="Yêu cầu khuyến nghị">
+
+*   8GB RAM
+*   50 GB Không gian Lưu trữ (SSD/NVMe)
+*   [CPU hỗ trợ tập lệnh x86-64-v3](/vi/installation/installation_prepare#x86_64-microarchitecture-level-support)
+*   Tốc độ internet 50 Mbps hoặc tốt hơn
+*   GPU NVIDIA (900+ - ví dụ: GTX 950), AMD +GCN 1.0 (ví dụ: AMD R7 240) hoặc Intel (Integrated HD Graphics series hoặc cao hơn. Arc Series)
+
+</TabItem>
+
+</Tabs>
+
+## Các cấp độ kiến trúc x86-64 được hỗ trợ
+
+<table className="bm-table" style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr style="border: 2px solid #444;">
+      <th style="border: 2px solid #444; padding: 8px; text-align: left;">x86-64 ABI</th>
+      <th style="border: 2px solid #444; padding: 8px; text-align: left;">Các Họ CPU / Ví dụ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border: 2px solid #444;">
+      <td style="border: 2px solid #444; padding: 8px;"><strong>x86-64-v3</strong></td>
+      <td style="border: 2px solid #444; padding: 8px;">
+        <ul>
+          <li>AMD Họ 15h (Excavator)</li>
+          <li>AMD Họ 17h (Zen)</li>
+          <li>AMD Họ 17h (Zen+)</li>
+          <li>AMD Họ 17h (Zen 2)</li>
+          <li>AMD Họ 19h (Zen 3)</li>
+          <li>Intel Core thế hệ 4 (Haswell)</li>
+          <li>Intel Core thế hệ 5 (Broadwell)</li>
+          <li>Intel Core thế hệ 6 (Skylake)</li>
+          <li>Intel Core thế hệ 7 (Kaby Lake)</li>
+          <li>Intel Core thế hệ 8/9 (Coffee Lake)</li>
+          <li>Intel Core thế hệ 10 (Comet Lake)</li>
+          <li>Intel Core thế hệ 12 (Alder Lake)</li>
+          <li>Intel Core thế hệ 13 (Raptor Lake)</li>
+          <li>Intel Core thế hệ 14 (Raptor Lake Refresh)</li>
+          <li>Intel Core thế hệ 15 (Lunar / Arrow Lake)</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="border: 2px solid #444;">
+      <td style="border: 2px solid #444; padding: 8px;"><strong>x86-64-v4</strong></td>
+      <td style="border: 2px solid #444; padding: 8px;">
+        <ul>
+          <li>AMD Họ 19h (Zen 4 / Zen 4c)</li>
+          <li>AMD Họ 1Ah (Zen 5 / Zen 5c)</li>
+          <li>Intel Core thế hệ 6 (Skylake X)</li>
+          <li>Intel Core thế hệ 8 i3 (Cannon Lake)</li>
+          <li>Intel Xeon / Core thế hệ 10 (Ice Lake)</li>
+          <li>Intel Xeon (Cascade Lake)</li>
+          <li>Intel Xeon (Cooper Lake)</li>
+          <li>Intel thế hệ 3 10nm++ (Tiger Lake)</li>
+          <li>Intel thế hệ 4 10nm++ (Sapphire Rapids)</li>
+          <li>Intel thế hệ 5 10nm++ (Emerald Rapids)</li>
+          <li>Intel Core thế hệ 11 (Rocket Lake)</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Tạo Ổ đĩa USB Khởi động được của CachyOS
+
+Có nhiều công cụ và phương pháp có thể được sử dụng để tạo một ổ đĩa USB khởi động được của CachyOS.
+
+:::tip
+Giữ một bản sao của ISO CachyOS trong cùng ổ đĩa hoặc ở một vị trí khác, để bạn có thể sử dụng nó sau này cho mục đích khắc phục sự cố qua chroot.
+:::
+
+:::note
+Ổ đĩa USB phải có ít nhất 8GB không gian có sẵn.
+:::
+
+### balenaEtcher
+
+<Steps>
+
+1. Tải xuống [balenaEtcher](<https://etcher.balena.io/>). balenaEtcher hỗ trợ flash một hình ảnh của Linux, MacOS và Windows.
+   Nếu tệp `.zip` được tải xuống, giải nén nó và thực thi tệp nhị phân bằng các lệnh sau:
+      ```sh
+      # Giải nén tệp zip:
+      bsdtar xvf <tên tệp zip>
+      # cd đến thư mục mới:
+      cd balenaEtcher-linux-x64/
+      # Thực thi balenaEtcher:
+      ./balena-etcher
+      ```
+2. Cắm ổ đĩa USB vào máy tính.
+3. Chọn `Flash from file` và chọn tệp hình ảnh ISO CachyOS.
+4. Nhấp vào `Select target` và chọn ổ đĩa USB đã được cắm trước đó.
+5. Nhấn `Flash` để bắt đầu quá trình flash.
+
+</Steps>
+
+:::note
+balenaEtcher có thể nhắc quyền quản trị viên. Nếu vậy, nhập mật khẩu của bạn và nhấp vào `Authenticate`.
+:::
+
+<br />
+
+<ImageComponent imgsrc={import('~/assets/images/etcher.png')} />
+
+### Giao diện Dòng lệnh (Linux & MacOS)
+
+<Steps>
+
+1. Cắm ổ đĩa USB.
+2. Phát hiện ổ đĩa USB đã cắm bằng các lệnh sau:
+   ```sh
+   # Linux
+   # Ổ đĩa USB có thể được xác định ví dụ: /dev/sda, theo mô hình đĩa và kích thước.
+   sudo fdisk -l
+
+   # MacOS
+   # Ổ đĩa USB được xác định là "/dev/diskY" trong đó "Y" có thể là 0,1 v.v.
+   diskutil list
+   ```
+3. Sao chép nội dung iso vào ổ đĩa USB đã cắm bằng cách chạy:
+   ```sh
+   # Thay thế <usbdrive> bằng nhãn của ổ đĩa.
+   sudo dd bs=4M if=tên_iso_đầy_đủ.iso of=/dev/<usbdrive> status=progress oflag=sync
+   ```
+</Steps>
+
+- `dd` bây giờ sẽ sao chép nội dung của tệp ISO qua ổ đĩa USB đã cắm.
+
+### Rufus (Chỉ Windows)
+
+<Steps>
+
+1. Cắm ổ đĩa USB.
+2. Tải xuống [Rufus](<https://rufus.ie/>) và cài đặt nó, hoặc chạy phiên bản di động.
+3. Trên `Device`, nhấp vào danh sách thả xuống và chọn ổ đĩa USB đã cắm.
+4. Trên `Boot selection`, nhấp vào `SELECT` và tìm tệp hình ảnh ISO CachyOS.
+5. Nhấp vào `START`.
+
+</Steps>
+
+### Ventoy (Linux & Windows)
+
+<Tabs>
+
+<TabItem label="Linux">
+
+<Steps>
+
+1. Cắm ổ đĩa USB.
+2. Tải xuống [Ventoy](<https://www.ventoy.net/en/download.html>)
+3. Giải nén Ventoy bằng lệnh sau:
+   ```sh
+   # Thay thế phiên bản bằng phiên bản đúng ví dụ: ventoy-1.1.07-linux.tar.gz
+   bsdtar xvf ventoy-version-linux.tar.gz
+   # cd đến thư mục mới: (phiên bản có thể thay đổi)
+   cd ventoy-1.1.07/
+   ```
+4. Thực thi `VentoyGUI.x86_64` bằng cách nhấp đúp vào nó hoặc qua terminal:
+   ```sh
+   # Nó sẽ yêu cầu quyền quản trị viên, nhập thông tin xác thực của bạn
+   ./VentoyGUI.x86_64
+   ```
+5. Chọn ổ đĩa USB đã cắm bằng cách nhấp vào `Device`.
+6. Nhấp vào `Install`.
+7. Sau khi nó hoàn tất cài đặt Ventoy vào ổ đĩa USB đã cắm, đóng cửa sổ và đặt tệp ISO CachyOS vào phân vùng sử dụng được mới của ổ đĩa.
+
+</Steps>
+
+</TabItem>
+
+<TabItem label="Windows">
+
+<Steps>
+1. Cắm ổ đĩa USB.
+2. Tải xuống [Ventoy](<https://www.ventoy.net/en/download.html>)
+3. Chạy `Ventoy2Disk.exe`
+4. Chọn ổ đĩa USB đã cắm bằng cách nhấp vào `Device`.
+5. Nhấp vào `Install`.
+6. Sau khi nó hoàn tất cài đặt Ventoy vào ổ đĩa USB, đóng cửa sổ và đặt tệp ISO CachyOS vào phân vùng sử dụng được mới của ổ đĩa.
+</Steps>
+
+</TabItem>
+
+</Tabs>
