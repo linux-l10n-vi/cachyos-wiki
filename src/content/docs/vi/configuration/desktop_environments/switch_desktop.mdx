@@ -1,0 +1,117 @@
+---
+title: Cài đặt DE/WM khác sử dụng Cài đặt CachyOS
+description: Hướng dẫn cách cài đặt DE/WM khác trong cài đặt CachyOS hiện tại trong khi sử dụng các cài đặt được cung cấp
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 4
+---
+
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+## Những điều cần cân nhắc trước khi cài đặt môi trường desktop khác
+
+- Việc cài đặt nhiều DE/WM có thể dẫn đến xung đột, đặc biệt là với các trình quản lý cài đặt, ứng dụng mặc định và cấu hình giao diện như chủ đề và biểu tượng trong các ứng dụng GTK hoặc QT.
+- Hai thủ phạm tồi tệ nhất về xung đột là GNOME và KDE Plasma vì chúng sử dụng hai bộ công cụ hoàn toàn khác nhau (lần lượt là GTK và QT) và có nhiều dịch vụ nền đang chạy có thể gây nhiễu với các DE/WM khác.
+  - Sự thật này không có nghĩa là bạn không thể cài đặt chúng cùng nhau, chỉ cần lưu ý rằng bạn có thể gặp một số vấn đề.
+- Phần mềm cồng kềnh: Các DE chính thống như GNOME và KDE Plasma có thể đi kèm với hàng trăm gói mà bạn có thể không cần hoặc không muốn.
+- Bạn có thể kết hợp nhiều Trình quản lý Cửa sổ với các DE khác nhau mà không gặp nhiều rắc rối. Ví dụ, bạn có thể cài đặt KDE Plasma và Hyprland cùng nhau và chọn sử dụng cái nào tại màn hình đăng nhập.
+- Các DE/WM do CachyOS cung cấp chứa gói `-settings` tương ứng của chúng. Ví dụ: `cachyos-i3wm-settings`
+  - Điều này có nghĩa là gì? Nếu bạn muốn cài đặt DE/WM khác và muốn có cùng giao diện hoặc tập hợp các thay đổi mà chúng tôi cung cấp, bạn nên cài đặt gói `-settings` tương ứng.
+  - Các gói này đặt tệp cấu hình vào `/etc/skel/`, đóng vai trò là mẫu cho các tài khoản người dùng mới.
+  - Quan trọng: Đối với người dùng hiện có, các cài đặt này **KHÔNG được áp dụng tự động** để tránh ghi đè cấu hình cá nhân của bạn.
+
+## Cách cài đặt DE/WM khác với cài đặt CachyOS
+
+:::note
+Bạn có hai lựa chọn khi cài đặt DE hoặc WM khác:
+1. **Giữ lại các tệp cấu hình hiện tại** của bạn và điều chỉnh thủ công hoặc sao chép các tệp từ `/etc/skel` khi cần.
+  - Ví dụ: nếu bạn chỉ muốn các tệp cấu hình i3wm nhưng muốn giữ chủ đề GTK hiện tại của mình, bạn chỉ cần sao chép các tệp liên quan đến i3wm từ `/etc/skel/.config/i3` vào thư mục nhà của mình.
+2. **Ghi đè các tệp cấu hình hiện tại** của bạn bằng các tệp mới từ `/etc/skel/`
+  - Điều này mang lại cho bạn trải nghiệm CachyOS hoàn chỉnh nhưng sẽ thay thế các cài đặt hiện tại của bạn.
+:::
+
+:::tip
+Tận dụng Arch Wiki cho DE hoặc WM tương ứng để có thông tin sâu hơn.
+:::
+
+<Steps>
+1. Tạo bản sao lưu các tệp cấu hình hiện tại của bạn trong thư mục nhà:
+    ```bash
+    mkdir -p ~/config-backup
+    cp -r ~/.config ~/config-backup/
+    cp -r ~/.local ~/config-backup/
+    ```
+2. Gỡ cài đặt gói `-settings` hiện tại nếu bạn có cài đặt. Ví dụ, nếu bạn đang sử dụng KDE, hãy chạy:
+    ```bash
+    sudo pacman -R cachyos-kde-settings
+    ```
+    :::note
+    Việc gỡ cài đặt gói này không xóa bất kỳ cấu hình DE/WM hiện tại nào của bạn. Nó chỉ xóa các tệp được lưu trữ trong `/etc/skel`
+    :::
+3. Cài đặt DE/WM mới cùng với gói `-settings` tương ứng của nó. Ví dụ, để cài đặt i3wm:
+    ```bash
+    sudo pacman -Syu i3wm cachyos-i3wm-settings
+    ```
+    :::tip
+    Bạn có thể kiểm tra danh sách các DE/WM có sẵn và các gói `-settings` tương ứng của chúng trong [kho lưu trữ GitHub CachyOS PKGBUILDs](https://github.com/CachyOS/CachyOS-PKGBUILDS)
+    :::
+    Hoặc bằng cách sử dụng trình quản lý tệp của bạn.
+4. Sao chép các tệp cấu hình mới từ `/etc/skel` vào thư mục nhà của bạn:
+    - Ví dụ: Gói `cachyos-i3wm-settings` chứa cấu hình cho Kvantum, dunst, GTK, i3, polybar, QT5 và rofi.
+    - Đây là cách thực hiện bằng trình quản lý tệp:
+        <Steps>
+        1. Mở trình quản lý tệp của bạn (Dolphin, Nautilus, Thunar, v.v.)
+        2. Bật chế độ xem các tệp ẩn:
+            - **Hầu hết các trình quản lý tệp**: `Ctrl+H` hoặc qua menu: `View` → `Show Hidden Files`
+        3. Điều hướng đến `/etc/skel` trong trình quản lý tệp.
+        4. Chọn tất cả các tệp và thư mục (`Ctrl+A`)
+        5. Sao chép chúng (`Ctrl+C`)
+        6. Điều hướng đến thư mục nhà của bạn
+        7. Dán các tệp (`Ctrl+V`)
+        8. Khi được nhắc về việc ghi đè, hãy chọn:
+            - **"Merge"** hoặc **"Apply to All"** cho các thư mục
+            - **"Replace"** cho các tệp riêng lẻ bạn muốn cập nhật
+            :::caution
+            Hãy cẩn thận khi thay thế tệp. Điều này sẽ ghi đè cấu hình hiện tại của bạn!
+            :::
+        </Steps>
+        - Hoặc chỉ sử dụng terminal nếu bạn quen thuộc với nó.
+</Steps>
+
+Sau khi cài đặt DE/WM mới và sao chép các tệp cấu hình, hãy đăng xuất khỏi phiên hiện tại của bạn. Tại màn hình đăng nhập, chọn DE/WM mới được cài đặt từ các tùy chọn phiên trước khi đăng nhập lại.
+
+### Câu hỏi thường gặp
+
+#### Làm thế nào để quay lại cấu hình DE/WM trước đó của tôi?
+
+- Khôi phục từ bản sao lưu bạn đã tạo:
+  ```bash
+  cp -r ~/config-backup/.config/* ~/.config/
+  cp -r ~/config-backup/.local/* ~/.local/
+  ```
+  Hoặc bằng cách sử dụng trình quản lý tệp.
+
+#### Vậy còn các bản cập nhật mới cho gói `-settings` thì sao?
+
+- Khi gói `-settings` cập nhật, các tệp mới được đặt trong `/etc/skel/`, nhưng cấu hình người dùng của bạn trong `/home/` vẫn không thay đổi. Để áp dụng cập nhật, bạn sẽ cần phải sao chép thủ công các tệp đã cập nhật từ `/etc/skel/` một lần nữa.
+
+Bạn sẽ phải theo dõi kho lưu trữ GitHub của DE/WM tương ứng cho bất kỳ thay đổi nào.
+
+Đây là danh sách tất cả các kho lưu trữ của các DE và WM khác nhau được bảo trì bởi CachyOS:
+- [KDE Plasma](https://github.com/CachyOS/cachyos-kde-settings)
+- [Niri](https://github.com/CachyOS/cachyos-niri-settings)
+- [i3](https://github.com/CachyOS/cachyos-i3wm-settings)
+- [Qtile](https://github.com/CachyOS/cachyos-qtile-settings)
+- [Wayfire](https://github.com/CachyOS/cachyos-wayfire-settings)
+
+Tất cả các DE và WM khác mà chúng tôi cung cấp khi cài đặt CachyOS hiện không có gói `-settings` riêng của họ. nghĩa là chúng chỉ là phiên bản vanilla.
+
+#### Tôi có thể giữ nhiều gói cài đặt DE/WM được cài đặt không?
+
+- Có và không. Bạn có thể cài đặt nhiều DE/WM, nhưng được khuyến nghị chỉ cài đặt một gói `-settings` tại một thời điểm để tránh xung đột trong `/etc/skel/`. Nếu không pacman có thể phàn nàn về xung đột tệp khi cố gắng cài đặt gói `-settings` khác.
+
+#### "Cài đặt CachyOS" là gì?
+
+"Cài đặt CachyOS" là các gói cấu hình tiện lợi cho các môi trường desktop và trình quản lý cửa sổ khác nhau. Chúng cung cấp cài đặt được cấu hình trước, chủ đề và các tinh chỉnh tùy thuộc vào DE/WM bạn chọn.
+
+Khi bạn cài đặt một trong các gói này. Nó cũng sẽ tự động cài đặt các phụ thuộc thêm không phải là một phần của DE/WM vanilla, chẳng hạn như chủ đề, biểu tượng, hình nền và các ứng dụng bổ sung. Ví dụ trong `cachyos-i3wm-settings` chúng tôi cài đặt `rofi`, `dunst`, `picom`, `lxappearance` và hơn thế nữa.

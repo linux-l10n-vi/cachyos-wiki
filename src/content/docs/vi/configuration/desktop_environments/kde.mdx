@@ -1,0 +1,32 @@
+---
+title: KDE Plasma
+description: Phần trợ giúp KDE Plasma của CachyOS.
+---
+
+import ImageComponent from '~/components/image-component.astro';
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+## Cách cài đặt phiên X11 bị thiếu
+
+Sau khi KDE quyết định chia thành nhiều gói, phiên X11 đã bị loại khỏi cài đặt mặc định.
+
+```sh
+sudo pacman -S plasma-x11-session kwin-x11
+```
+
+## Câu hỏi thường gặp
+
+### Làm thế nào tôi có thể có được giao diện giống như trong ảnh chụp màn hình KDE, có tên là "Emerald"?
+
+- Đây là sự kết hợp của Emerald Theme + Qogir Icon Theme không được cài đặt theo mặc định.
+  - ```sh title='Cài đặt cả hai với lệnh sau'
+    sudo pacman -S cachyos-emerald-kde-theme-git qogir-icon-theme
+    ```
+  Áp dụng cả hai trong `Appearance & Style - Colors & Themes`
+
+### Tại sao SDDM trông thật nhạt nhòa và cũ?
+
+- *Vì không có chủ đề SDDM được áp dụng theo mặc định, SDDM sẽ quay về chủ đề cổ điển.*
+  - **Áp dụng chủ đề Breeze như trong ảnh chụp màn hình**
+    <br />
+    <ImageComponent imgsrc={import('~/assets/images/plasma-sddm-theme.png')} />

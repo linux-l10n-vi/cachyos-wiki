@@ -1,0 +1,193 @@
+---
+title: Phím tắt & Câu hỏi thường gặp của Niri
+description: Phím tắt và câu hỏi thường gặp của Niri trên CachyOS
+---
+
+import { Kbd } from 'starlight-kbd/components'
+
+:::note
+Niri là một trình quản lý cửa sổ Wayland dạng xếp lát có thể cuộn được, cung cấp một cách tiếp cận độc đáo để quản lý cửa sổ với hệ thống bố cục dựa trên cột.
+:::
+
+Mục tiêu chính của chúng tôi với cài đặt này là có một cấu hình Niri hoạt động mang lại trải nghiệm desktop mượt mà và trực quan trong khi giữ cấu hình đơn giản và dễ tiếp cận.
+
+Xem [FAQ về Niri của chúng tôi.](/vi/configuration/desktop_environments/niri#faq)
+
+**Dotfiles được bảo trì bởi [Ly-sec](https://github.com/Ly-sec)**
+
+## Phím tắt
+
+Hầu hết các tổ hợp phím đều yêu cầu sử dụng phím mod, trong trường hợp của chúng tôi là phím Windows (được gọi là SUPER), bạn có thể thay đổi nó trong tệp cấu hình.
+
+### Điều khiển ứng dụng
+
+| Mô tả | Phím |
+|-------------|-----|
+| Mở terminal | <Kbd linux="Super+Return" /> |
+| Mở Wofi (Trình khởi chạy chương trình) | <Kbd linux="Super+Space" /> |
+| Mở trình duyệt (Firefox) | <Kbd linux="Super+B" /> |
+| Mở trình quản lý tệp | <Kbd linux="Super+E" /> |
+| Đóng cửa sổ đang tập trung | <Kbd linux="Super+Q" /> |
+| Khóa màn hình | <Kbd linux="Super+Alt+L" /> |
+
+### Điều hướng không gian làm việc
+
+| Mô tả | Phím |
+|-------------|-----|
+| Chuyển đến không gian làm việc (1-9) | <Kbd linux="Super+1" /> đến <Kbd linux="Super+9" /> |
+| Không gian làm việc trước đó | <Kbd linux="Super+Tab" /> |
+| Di chuyển giữa các không gian làm việc với cuộn chuột | <Kbd linux="Super+Scroll" /> |
+
+### Điều hướng cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Tập trung cửa sổ/cột phía trên | <Kbd linux="Super+ArrowUp" /> hoặc <Kbd linux="Super+K" /> |
+| Tập trung cửa sổ/cột phía dưới | <Kbd linux="Super+ArrowDown" /> hoặc <Kbd linux="Super+J" /> |
+| Tập trung cột bên trái | <Kbd linux="Super+ArrowLeft" /> hoặc <Kbd linux="Super+H" /> |
+| Tập trung cột bên phải | <Kbd linux="Super+ArrowRight" /> hoặc <Kbd linux="Super+L" /> |
+| Tập trung cột đầu tiên | <Kbd linux="Super+Home" /> |
+| Tập trung cột cuối cùng | <Kbd linux="Super+End" /> |
+
+### Điều hướng màn hình
+
+| Mô tả | Phím |
+|-------------|-----|
+| Tập trung màn hình bên trái | <Kbd linux="Super+Shift+ArrowLeft" /> |
+| Tập trung màn hình bên phải | <Kbd linux="Super+Shift+ArrowRight" /> |
+| Tập trung màn hình phía trên | <Kbd linux="Super+Shift+ArrowUp" /> |
+| Tập trung màn hình phía dưới | <Kbd linux="Super+Shift+ArrowDown" /> |
+
+### Quản lý cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Di chuyển cửa sổ đến không gian làm việc (1-9) | <Kbd linux="Super+Control+1" /> đến <Kbd linux="Super+Control+9" /> |
+| Di chuyển cửa sổ/cột lên trên | <Kbd linux="Super+Control+ArrowUp" /> hoặc <Kbd linux="Super+Control+K" /> |
+| Di chuyển cửa sổ/cột xuống dưới | <Kbd linux="Super+Control+ArrowDown" /> hoặc <Kbd linux="Super+Control+J" /> |
+| Di chuyển cột sang trái | <Kbd linux="Super+Control+ArrowLeft" /> hoặc <Kbd linux="Super+Control+H" /> |
+| Di chuyển cột sang phải | <Kbd linux="Super+Control+ArrowRight" /> hoặc <Kbd linux="Super+Control+L" /> |
+| Di chuyển cột đến vị trí đầu tiên | <Kbd linux="Super+Control+Home" /> |
+| Di chuyển cột đến vị trí cuối cùng | <Kbd linux="Super+Control+End" /> |
+| Di chuyển cột đến màn hình bên trái | <Kbd linux="Super+Shift+Control+ArrowLeft" /> |
+| Di chuyển cột đến màn hình bên phải | <Kbd linux="Super+Shift+Control+ArrowRight" /> |
+| Di chuyển cột đến màn hình phía trên | <Kbd linux="Super+Shift+Control+ArrowUp" /> |
+| Di chuyển cột đến màn hình phía dưới | <Kbd linux="Super+Shift+Control+ArrowDown" /> |
+
+### Điều khiển bố cục
+
+| Mô tả | Phím |
+|-------------|-----|
+| Mở rộng cột đến chiều rộng có sẵn | <Kbd linux="Super+Control+F" /> |
+| Căn giữa cột | <Kbd linux="Super+C" /> |
+| Căn giữa các cột hiển thị | <Kbd linux="Super+Control+C" /> |
+| Giảm chiều rộng cột | <Kbd linux="Super+Minus" /> |
+| Tăng chiều rộng cột | <Kbd linux="Super+Equal" /> |
+| Giảm chiều cao cửa sổ | <Kbd linux="Super+Shift+Minus" /> |
+| Tăng chiều cao cửa sổ | <Kbd linux="Super+Shift+Equal" /> |
+
+### Chế độ cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Bật/tắt cửa sổ nổi | <Kbd linux="Super+T" /> |
+| Bật/tắt cửa sổ toàn màn hình | <Kbd linux="Super+F" /> |
+| Bật/tắt hiển thị tab cột | <Kbd linux="Super+W" /> |
+| Bật/tắt chế độ tổng quan | <Kbd linux="Super+O" /> |
+
+### Chụp ảnh màn hình
+
+| Mô tả | Phím |
+|-------------|-----|
+| Chụp ảnh khu vực đã chọn | <Kbd linux="Control+Shift+1" /> |
+| Chụp ảnh màn hình | <Kbd linux="Control+Shift+2" /> |
+| Chụp ảnh cửa sổ | <Kbd linux="Control+Shift+3" /> |
+
+### Điều khiển hệ thống
+
+| Mô tả | Phím |
+|-------------|-----|
+| Hiển thị lớp phủ phím tắt | <Kbd linux="Super+Shift+Escape" /> |
+| Phím thoát khẩn cấp (khôi phục điều khiển) | <Kbd linux="Super+Escape" /> |
+| Tắt màn hình | <Kbd linux="Super+Shift+P" /> |
+| Thoát Niri | <Kbd linux="Control+Alt+Delete" /> |
+
+### Điều khiển đa phương tiện
+
+| Mô tả | Phím |
+|-------------|-----|
+| Tăng âm lượng | <Kbd linux="VolUp" /> |
+| Giảm âm lượng | <Kbd linux="VolDown" /> |
+| Tắt tiếng âm thanh | <Kbd linux="VolMute" /> |
+| Tắt tiếng micro | <Kbd linux="MicMute" /> |
+| Bài tiếp theo | <Kbd linux="MediaNext" /> |
+| Bài trước đó | <Kbd linux="MediaPrev" /> |
+| Phát/tạm dừng | <Kbd linux="MediaPlayPause" /> |
+
+### Điều hướng nâng cao
+
+| Mô tả | Phím |
+|-------------|-----|
+| Cuộn ngang với chuột | <Kbd linux="Super+Scroll Left/Right" /> |
+| Di chuyển cột với cuộn ngang | <Kbd linux="Super+Control+Scroll Left/Right" /> |
+| Điều hướng cột thay thế | <Kbd linux="Super+Shift+Scroll Up/Down" /> |
+| Di chuyển cột với cuộn thay thế | <Kbd linux="Super+Control+Shift+Scroll Up/Down" /> |
+
+## FAQ
+
+### Điều gì làm Niri khác biệt so với các trình quản lý cửa sổ khác?
+
+Niri sử dụng cách tiếp cận xếp lát-cuộn độc đáo trong đó các cửa sổ được sắp xếp trong các cột có thể cuộn theo chiều ngang. Điều này cung cấp một desktop vô hạn đặc biệt hữu ích cho màn hình siêu rộng và quy trình làm việc yêu cầu nhiều ứng dụng mở.
+
+### Làm thế nào để thay đổi bố cục bàn phím?
+
+Chỉnh sửa phần input trong tệp cấu hình của bạn:
+
+```txt title='Ví dụ'
+input {
+    keyboard {
+        xkb {
+            layout "us" // Thay từ "de" thành bố cục bạn muốn
+        }
+    }
+}
+```
+
+### Tôi có thể tùy chỉnh khoảng cách và giao diện cửa sổ không?
+
+Có, bạn có thể sửa đổi phần layout:
+
+```txt title='Ví dụ'
+layout {
+    gaps 8 // Thay đổi kích thước khoảng cách
+
+    tập trung-ring {
+        width 2
+        active-color "#màu-của-bạn"
+        inactive-color "#màu-của-bạn"
+    }
+}
+```
+
+### Làm thế nào để thêm nhiều ứng dụng khởi động hơn?
+
+Thêm chúng vào phần startup:
+
+```txt title='Ví dụ'
+spawn-at-startup "ứng-dụng-của-bạn"
+```
+
+### Phím thoát khẩn cấp dùng để làm gì?
+
+Phím tắt `Super+Escape` được thiết kế để khôi phục điều khiển khi một ứng dụng toàn màn hình chặn các phím tắt của bạn. Nó vô hiệu hóa bất kỳ trình ức chế phím tắt bàn phím đang hoạt động nào.
+
+### Làm thế nào để cấu hình nhiều màn hình?
+
+Bỏ ghi chú và sửa đổi phần output cho các màn hình cụ thể của bạn. Chạy `niri msg outputs` để lấy tên đúng:
+
+```txt title='Ví dụ'
+output "DP-1" {
+    mode "1920x1080@60.000"
+    scale 1
+}
+```

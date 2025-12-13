@@ -1,0 +1,318 @@
+---
+title: Kho lưu trữ Tối ưu hóa
+description: Thông tin về các kho lưu trữ được tối ưu hóa của chúng tôi
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 4
+---
+
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+import ImageComponent from '~/components/image-component.astro';
+
+Để cung cấp một bản phân phối được tối ưu hóa hiệu suất, CachyOS biên dịch lại các gói Arch Linux cụ thể cho các kiến trúc `x86-64-v3`, `x86-64-v4`, và `Zen4+`.
+
+- **x86-64-v3:** Tăng hiệu suất 5%-20% so với x86-64.
+- **x86-64-v4:** Cung cấp lợi ích hiệu suất đáng kể thông qua hỗ trợ AVX512, tùy thuộc vào khối lượng công việc.
+- **Zen 4/5:** Ngoài bộ lệnh x86-64-v4, các lệnh sau được thêm vào:
+
+```text
+abm, adx, aes, avx512bf16, avx512bitalg, avx512ifma, avx512vbmi, avx512vbmi2, avx512vnni,
+avx512vpopctndq, clflushopt, clwb, clzero, fsgsbase, gfni, mwaitx, pclmul, pku, prfchw,
+rpdid, rdrnd, rdseed, sha, sse4a, vaes, vockmulqdq, wbnoinvd, savec, xsaveopt, xsaves
+```
+
+Để tìm hiểu thêm về các kiến trúc này, [kiểm tra bài viết Wikipedia này](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels).
+
+## Gói Tùy chỉnh
+
+Kho lưu trữ [CachyOS-PKGBUILDs](https://github.com/CachyOS/CachyOS-PKGBUILDS) của chúng tôi chứa các gói nhận được cập nhật liên tục, bản vá và sửa chữa được backport.
+Để tăng hiệu suất, chúng tôi có chọn lọc triển khai các tối ưu hóa PGO, LTO và BOLT tùy thuộc vào nhu cầu.
+Chúng tôi cũng duy trì một vài gói `-git` ví dụ mesa-git.
+
+### [Tìm kiếm Gói CachyOS](<https://packages.cachyos.org/>)
+
+Giới thiệu trang tìm kiếm gói mới của chúng tôi cho CachyOS. Bây giờ bạn có thể dễ dàng tìm kiếm các gói và truy cập thông tin chi tiết, chẳng hạn như kiến trúc biên dịch của chúng, ngày cập nhật cuối cùng và nhiều hơn nữa.
+
+<ImageComponent imgsrc={import('~/assets/images/cachyos-package-dashboard.png')} />
+
+## Di chuyển từ x86-64-v3 sang x86-64-v4 hoặc znver4
+
+Nếu bạn hiện đang sử dụng kho lưu trữ x86-64-v3 và CPU mới của bạn hỗ trợ x86-64-v4 (hoặc AMD Zen 4/5), bạn có thể di chuyển bằng cách làm theo các bước sau:
+
+### Kiểm tra Tương thích CPU
+
+:::caution
+CPU Intel thế hệ 12 (Alder Lake) và mới hơn có thể báo cáo hỗ trợ `x86-64-v4`, nhưng trên thực tế chúng **không thể chạy các lệnh AVX-512**.
+
+Tại sao?
+- **Xung đột kiến trúc lai:** Các nhân lớn "P-cores" hỗ trợ AVX-512, nhưng các nhân nhỏ "E-cores" thì không. Chạy AVX-512 trong khi các E-core đang hoạt động sẽ gây ra mất ổn định.
+- **Giải pháp của Intel:** Để tránh sự không khớp này, Intel đã vô hiệu hóa AVX-512 theo hai cách:
+  - **Cập nhật Microcode/BIOS** (các chip Alder Lake ban đầu): AVX-512 có thể được kích hoạt lại bằng cách tránh hoặc quay lại các cập nhật microcode.
+  - **Hàn kết phần cứng** (các chip 2022+ sau): AVX-512 bị vô hiệu hóa vĩnh viễn tại nhà máy, làm cho việc kích hoạt lại trở nên bất khả thi.
+
+Vì `x86-64-v4` yêu cầu AVX-512, các CPU này nên được coi là **chỉ x86-64-v3**.
+:::
+
+- Xác minh hỗ trợ `x86-64-v4`:
+  ```sh title='Chạy lệnh sau:'
+  /lib/ld-linux-x86-64.so.2 --help | grep supported
+  ```
+  - ✅ `x86-64-v4 (supported, searched)` → CPU supports v4
+  - ❌ No `x86-64-v4` line → CPU does not support v4
+
+Ví dụ (CPU hỗ trợ v4):
+  ```sh
+  $ /lib/ld-linux-x86-64.so.2 --help | grep supported
+    x86-64-v2 (supported, searched)
+    x86-64-v3 (supported, searched)
+    x86-64-v4 (supported, searched)
+  ```
+
+- Đối với CPU AMD Zen 4/5, kiểm tra xem CPU của bạn có báo cáo znver4 hay znver5 không:
+  - Chạy lệnh sau:
+    ```sh
+    gcc -march=native -Q --help=target 2>&1 | grep -Po "^\s+-march=\s+\K(\w+)\$"
+    ```
+    Nếu đầu ra là `znver4` hoặc `znver5`, bạn có thể tiếp tục với việc di chuyển.
+
+:::note
+Cả x86-64-v4 và znver4 đều sử dụng cùng mirrorlist `/etc/pacman.d/cachyos-v4-mirrorlist`.
+:::
+
+:::note[Nếu bạn cần quay lại một kho lưu trữ hoặc hoàn nguyên thay đổi, hướng dẫn này sẽ hữu ích cho bạn.]
+Ví dụ: Từ znver4 sang v4.
+:::
+
+### Các bước Di chuyển
+
+<Steps>
+1. Chỉnh sửa `/etc/pacman.conf` và thay thế kho lưu trữ `x86-64-v3` của bạn bằng một trong các tùy chọn sau tùy thuộc vào hỗ trợ CPU của bạn:
+    <Tabs>
+        <TabItem label="x86-64-v4">
+            ```ini title='/etc/pacman.conf'
+            [cachyos-v4]
+            Include = /etc/pacman.d/cachyos-v4-mirrorlist
+
+            [cachyos-core-v4]
+            Include = /etc/pacman.d/cachyos-v4-mirrorlist
+
+            [cachyos-extra-v4]
+            Include = /etc/pacman.d/cachyos-v4-mirrorlist
+            ```
+        </TabItem>
+
+        <TabItem label="znver4 (chỉ AMD Zen 4/5)">
+          ```ini title='/etc/pacman.conf'
+          [cachyos-znver4]
+          Include = /etc/pacman.d/cachyos-v4-mirrorlist
+
+          [cachyos-core-znver4]
+          Include = /etc/pacman.d/cachyos-v4-mirrorlist
+
+          [cachyos-extra-znver4]
+          Include = /etc/pacman.d/cachyos-v4-mirrorlist
+        ```
+        </TabItem>
+        Giữ `[cachyos]`, `[core]`, `[extra]`, và `[multilib]` không thay đổi.
+        </Tabs>
+2. Xóa bộ nhớ đệm gói và đồng bộ hóa cơ sở dữ liệu:
+
+   ```sh
+   sudo pacman -Scc   # Xác nhận với 'y' hai lần
+   sudo pacman -Sy
+   ```
+
+3. Cài đặt lại tất cả các gói để chuyển sang kiến trúc mới:
+
+   ```sh
+   pacman -Qqn | sudo pacman -S -
+   ```
+
+4. Khởi động lại hệ thống của bạn.
+</Steps>
+
+---
+
+## Thêm Kho lưu trữ của Chúng tôi vào Bản cài đặt Arch Linux Hiện có
+
+:::caution
+Việc cài đặt CachyOS Pacman sẽ cài đặt một pacman fork với các tính năng được thêm từ CachyOS, như "INSTALLED_FROM" và kiểm tra kiến trúc tự động. Pacman 6.1 đã thêm một tính năng xác thực tính năng, có thể dẫn đến cảnh báo khi sử dụng pacman Arch Linux. Chúng tôi đang làm việc với Arch Linux để cung cấp lại sự tương thích phù hợp. Nếu bạn muốn tránh điều này, đừng thêm kho lưu trữ "cachyos", chứa pacman tùy chỉnh. Tất cả các kho lưu trữ khác như cachyos-v3, cachyos-v4, cachyos-extra/core-v3/4 đều an toàn để thêm.
+:::
+
+:::tip
+Trước khi cân nhắc thêm kho lưu trữ của chúng tôi, vui lòng xem **[danh sách tương thích CPU](/vi/installation/installation_prepare#x86_64-microarchitecture-level-support)**
+:::
+
+<Tabs>
+
+<TabItem label='Tự động'>
+
+Chúng tôi cung cấp một script tự động hóa việc cài đặt kho lưu trữ của chúng tôi vào các bản cài đặt dựa trên Arch hiện có của bạn.
+
+```sh
+curl https://mirror.cachyos.org/cachyos-repo.tar.xz -o cachyos-repo.tar.xz
+tar xvf cachyos-repo.tar.xz && cd cachyos-repo
+sudo ./cachyos-repo.sh
+```
+
+:::tip[Cách hoạt động của script]
+Script này phát hiện các bộ lệnh mà CPU của bạn có khả năng và cài đặt phiên bản kho lưu trữ của chúng tôi được
+tối ưu hóa nhất cho nó. Nó cũng sao lưu `pacman.conf` cũ của bạn để loại bỏ kho lưu trữ thông qua script.
+:::
+
+</TabItem>
+
+<TabItem label='Thủ công'>
+
+<Steps>
+
+1. Cài đặt CachyOS keyring:
+
+   ```sh
+   # Nhập khóa kho lưu trữ
+   sudo pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+   # Ký khóa kho lưu trữ
+   sudo pacman-key --lsign-key F3B607488DB35A47
+   ```
+2. Cài đặt các gói cần thiết:
+
+   ```sh
+   sudo pacman -U 'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-keyring-20240331-1-any.pkg.tar.zst' \
+   'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-mirrorlist-22-1-any.pkg.tar.zst' \
+   'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v3-mirrorlist-22-1-any.pkg.tar.zst' \
+   'https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v4-mirrorlist-22-1-any.pkg.tar.zst' \
+   'https://mirror.cachyos.org/repo/x86_64/cachyos/pacman-7.0.0.r7.g1f38429-2-x86_64.pkg.tar.zst'
+   ```
+3. Thêm các kho lưu trữ CachyOS vào tệp cấu hình pacman:
+   :::note
+   Các kho lưu trữ này nên được đặt trên Kho lưu trữ Arch Linux.
+   :::
+
+   ```ini
+   # /etc/pacman.conf
+   # Nếu CPU của bạn chỉ hỗ trợ x86-64, thì thêm kho lưu trữ [cachyos]
+   # cachyos repos
+   [cachyos]
+   Include = /etc/pacman.d/cachyos-mirrorlist
+
+   # Nếu CPU của bạn hỗ trợ x86-64-v3, thì thêm [cachyos-v3],[cachyos-core-v3],[cachyos-extra-v3] và [cachyos]
+   # cachyos repos
+
+   [cachyos-v3]
+   Include = /etc/pacman.d/cachyos-v3-mirrorlist
+   [cachyos-core-v3]
+   Include = /etc/pacman.d/cachyos-v3-mirrorlist
+   [cachyos-extra-v3]
+   Include = /etc/pacman.d/cachyos-v3-mirrorlist
+   [cachyos]
+   Include = /etc/pacman.d/cachyos-mirrorlist
+
+   # Nếu CPU của bạn hỗ trợ x86-64-v4, thì thêm [cachyos-v4], [cachyos-core-v4], [cachyos-extra-v4] và [cachyos]
+   # cachyos repos
+
+   [cachyos-v4]
+   Include = /etc/pacman.d/cachyos-v4-mirrorlist
+   [cachyos-core-v4]
+   Include = /etc/pacman.d/cachyos-v4-mirrorlist
+   [cachyos-extra-v4]
+   Include = /etc/pacman.d/cachyos-v4-mirrorlist
+   [cachyos]
+   Include = /etc/pacman.d/cachyos-mirrorlist
+
+   # Nếu CPU của bạn dựa trên Zen 4 hoặc Zen 5, thêm [cachyos-znver4], [cachyos-core-znver4], [cachyos-extra-znver4] và [cachyos]
+
+   [cachyos-znver4]
+   Include = /etc/pacman.d/cachyos-v4-mirrorlist
+   [cachyos-core-znver4]
+   Include = /etc/pacman.d/cachyos-v4-mirrorlist
+   [cachyos-extra-znver4]
+   Include = /etc/pacman.d/cachyos-v4-mirrorlist
+   [cachyos]
+   Include = /etc/pacman.d/cachyos-mirrorlist
+   ```
+      :::tip
+   Để thực hiện chuyển đổi từ kho lưu trữ `v4` sang `znver4`
+
+   Thêm các mục tương ứng từ bước trước và thực hiện các lệnh sau:
+    ```sh
+    sudo pacman -Scc # Nhập Y trong cả hai trường hợp
+    sudo pacman -Sy
+    pacman -Qqn | sudo pacman -S --needed - # Để thay thế tất cả các gói v4 bằng các gói znver4
+    # Khởi động lại hệ thống của bạn
+    ```
+   :::
+
+4. Cuối cùng, cập nhật hệ thống của bạn với các gói CachyOS:
+   ```sh
+   sudo pacman -Syu
+   ```
+
+</Steps>
+
+</TabItem>
+
+</Tabs>
+
+### Gỡ cài đặt Kho lưu trữ CachyOS
+
+<Tabs>
+<TabItem label='Tự động'>
+
+**Chạy các lệnh sau để loại bỏ kho lưu trữ CachyOS khỏi hệ thống của bạn:**
+```sh
+curl https://mirror.cachyos.org/cachyos-repo.tar.xz -o cachyos-repo.tar.xz
+tar xvf cachyos-repo.tar.xz
+cd cachyos-repo
+sudo ./cachyos-repo.sh --remove
+```
+
+</TabItem>
+
+<TabItem label='Thủ công'>
+
+<Steps>
+
+1. Cài đặt lại pacman gốc từ Arch Linux:
+   ```sh
+   sudo pacman -S core/pacman
+   ```
+2. Thực hiện lệnh sau:
+   ```sh
+   # Điều này tránh nhận được cảnh báo %INSTALLED_DB%
+   sudo find /var/lib/pacman/local/ -type f -name "desc" -exec sed -i '/^%INSTALLED_DB%$/,+2d' {} \;
+   ```
+3. Khôi phục tệp cấu hình pacman từ bản sao lưu:
+   ```sh
+   sudo mv /etc/pacman.conf.bak /etc/pacman.conf
+   ```
+4. Chuyển trở lại các gói Arch Linux mặc định với các lệnh sau:
+   ```sh
+   pacman -Qqn | sudo pacman -S -
+   sudo pacman -Syu
+   ```
+</Steps>
+
+</TabItem>
+</Tabs>
+
+## Kiểm tra và điểm chuẩn
+
+Michael từ Phoronix đã thực hiện điểm chuẩn CachyOS vài lần, chủ yếu dẫn đầu trong các biểu đồ điểm chuẩn và trong trung bình của Tất cả Kết quả Kiểm tra.
+Kể từ lần điểm chuẩn đầu tiên vào năm 2022, CachyOS đã phát triển và trưởng thành hơn rất nhiều về tính khả dụng và hiệu suất.
+
+Nếu bạn muốn biết thêm về sự cải thiện hiệu suất từ các kho lưu trữ của chúng tôi, vui lòng kiểm tra các liên kết dưới đây.
+
+* **14/03/2021:** Trong một thảo luận RFC về tác động của x86-64-v3 được bắt đầu bởi **Mateusz Jończyk** từ Arch Linux đã cho thấy một số kết quả ban đầu.
+  * [RFC: Use x86_64-v2 architecture](https://lists.archlinux.org/pipermail/arch-general/2021-March/048739.html)
+
+* **09/12/2022:** Lần điểm chuẩn đầu tiên được thực hiện bởi Michael.
+  * [The Performance Of Arch Linux Powered CachyOS](https://www.phoronix.com/review/cachyos-linux-perf)
+
+* **29/02/2024:** Phoronix đã thực hiện một điểm chuẩn khác thể hiện sự khác biệt giữa các gói x86-64-v4, x86-64-v3 và x86-64 (nguyên bản). Nhìn vào các ví dụ như PHP hoặc GCC, nơi chúng tôi tùy chỉnh PKGBUILDs của mình có sự cải thiện hiệu suất đáng chú ý.
+  * [Arch Linux CachyOS Benchmarks Of x86-64-v3 & x86-64-v4 Repositories](https://www.phoronix.com/review/cachyos-x86-64-v3-v4)
+
+* **20/08/2024:** Michael đã đăng một điểm chuẩn mới cho AMD Ryzen 9950x trong đó bao gồm CachyOS và một số Bản phân phối Linux khác.
+  * [Intel Continues To Show AMD The Importance Of Software Optimizations: 16% More Ryzen 9 9950X Performance](https://www.phoronix.com/review/linux-os-amd-ryzen9-9950x)
+   :::note
+   Liquid-DSP và RocksDB được biên dịch bằng Bộ điểm chuẩn Phoronix, bỏ qua các cờ biên dịch được chỉ định trong /etc/makepkg.conf dẫn đến kết quả hiệu suất không mong muốn cho CachyOS.
+   :::

@@ -1,0 +1,77 @@
+---
+title: Quản lý Phần cứng với chwd
+description: Phát hiện và Cấu hình Phần cứng cho CachyOS
+---
+
+[Phát hiện Phần cứng CachyOS](https://github.com/CachyOS/chwd/) (thường được biết đến với tên `chwd`) cho phép chúng tôi vận hành nhiều loại phần cứng khác nhau bằng cách cài đặt các
+gói và trình điều khiển cần thiết cho hệ thống đang chạy. Điều này bao gồm các hệ thống chạy card đồ họa của NVIDIA, MacBook T2 và các thiết bị cầm tay như Steam Deck và ROG Ally.
+
+## Sử dụng
+
+`chwd` thường được chạy trong thời gian cài đặt để cung cấp các gói cần thiết cho hệ thống. Tuy nhiên, nó cũng có thể
+được sử dụng sau khi cài đặt.
+
+### Cấu hình Tự động
+
+`chwd` hỗ trợ cài đặt và cấu hình các trình điều khiển và gói cần thiết để hệ thống có thể hoạt động trong điều kiện tối ưu.
+
+```sh
+sudo chwd -a
+```
+
+### Cài đặt một cấu hình
+
+Một phương án thay thế cho phương pháp trên là cài đặt mỗi cấu hình cụ thể.
+
+```sh title='Liệt kê tất cả các cấu hình có sẵn'
+chwd --list-all
+╭─────────────────────────┬─────────╮
+│ Name                    ┆ NonFree │
+╞═════════════════════════╪═════════╡
+│ nvidia-open-dkms.prime  ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ nvidia-dkms             ┆ true    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ macbook-t2              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ phoenix                 ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ steam-deck              ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ amd                     ┆ false   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ intel                   ┆ false   │
+╰─────────────────────────┴─────────╯
+```
+
+```sh title='Cài đặt một cấu hình chwd'
+sudo chwd -i amd
+> Installing amd ...
+
+> Successfully installed amd
+```
+
+### Khác
+
+Xem đầu ra trợ giúp của `chwd` để biết cú pháp lệnh và cách sử dụng khác.
+
+```sh
+chwd --help
+Usage: chwd [OPTIONS]
+
+Options:
+  -i, --install <profile>          Install profile
+  -r, --remove <profile>           Remove profile
+  -d, --detail                     Show detailed info for listings
+  -f, --force                      Force reinstall
+      --list-installed             List installed kernels
+      --list                       List available profiles for all devices
+      --list-all                   List all profiles
+  -a, --autoconfigure [<classid>]  Autoconfigure
+      --ai_sdk                     Toggle AI SDK profiles
+      --pmcachedir <PMCACHEDIR>    [default: /var/cache/pacman/pkg]
+      --pmconfig <PMCONFIG>        [default: /etc/pacman.conf]
+      --pmroot <PMROOT>            [default: /]
+  -h, --help                       Print help
+  -V, --version                    Print version
+```

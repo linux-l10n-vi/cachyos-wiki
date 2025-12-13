@@ -1,0 +1,166 @@
+---
+title: Nhân CachyOS
+description: Tính năng và thay đổi trên nhân CachyOS
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 4
+---
+
+Nhân CachyOS là một nhân tùy chỉnh sử dụng các cải tiến, cấu hình và bản vá từ upstream.
+
+## Tính năng
+
+### Tối ưu hóa Hiệu suất
+
+- **Biên dịch Nâng cao**: PKGBUILD có khả năng tùy chỉnh cao hỗ trợ cả trình biên dịch GCC và Clang
+- **Tối ưu hóa Thời gian Liên kết (LTO)**: Thin LTO được bật theo mặc định để có hiệu suất tốt hơn
+- **Tối ưu hóa Hướng dẫn Hồ sơ**: Hồ sơ AutoFDO + Propeller để tạo mã tối ưu ([Tìm hiểu thêm](https://cachyos.org/blog/2411-kernel-autofdo/))
+- **Tính toàn vẹn Luồng điều khiển Nhân (kCFI)**: Có sẵn khi sử dụng LLVM để tăng cường bảo mật
+- **Tùy chọn Tần số Timer**: Có thể cấu hình giữa 300Hz, 500Hz, 600Hz, 750Hz và 1000Hz (mặc định: 1000Hz)
+- **Tối ưu hóa Kiến trúc**: Hỗ trợ các bản dựng x86-64-v3, x86-64-v4 và AMD Zen4
+- **Tối ưu hóa Trình biên dịch**: Các cờ GCC nâng cao bao gồm `-fivopts` và `-fmodulo-sched`
+
+### Cải tiến CPU
+
+- **Nhiều Trình lập lịch**: Trình lập lịch BORE, EEVDF và BMQ để tối ưu hóa khối lượng công việc khác nhau
+- **Cải tiến AMD P-State**: Hỗ trợ Preferred Core và các cải tiến amd-pstate mới nhất từ linux-next
+- **Hỗ trợ Thời gian thực**: Các bản nhân RT có sẵn với tích hợp trình lập lịch BORE
+- **CachyOS Sauce**: Cấu hình `CONFIG_CACHY` tùy chỉnh với các tinh chỉnh trình lập lịch và hệ thống
+- **Tối ưu hóa Độ trễ Thấp**: Các bản vá để cải thiện khả năng phản hồi và giảm jitter
+
+### Hệ thống tệp & Bộ nhớ
+
+- **Hỗ trợ ZFS**: Hỗ trợ hệ thống tệp ZFS tích hợp với các mô-đun được biên dịch sẵn
+- **Tích hợp NVIDIA**:
+  - Các mô-đun trình điều khiển NVIDIA độc quyền với bản vá
+  - Hỗ trợ mô đun NVIDIA mã nguồn mở
+  - Các mô-đun sẵn sàng sử dụng trong kho lưu trữ
+- **Cải tiến Trình lập lịch I/O**:
+  - Hiệu suất BFQ và mq-deadline được cải tiến
+  - Hỗ trợ trình lập lịch I/O [ADIOS](https://github.com/firelzrd/adios) thay thế
+- **Quản lý Bộ nhớ**:
+  - Bản vá [le9uo](https://github.com/firelzrd/le9uo) để ngăn chặn hiện tượng rung trang dưới áp lực bộ nhớ
+  - Các tinh chỉnh quản lý bộ nhớ Zen-kernel (tối ưu hóa compaction, watermark)
+
+### Tính năng Thêm
+
+#### Hỗ trợ Phần cứng
+- **Phần cứng Game**: Các bản vá Steam Deck (Audio, HW Quirks, HID) và hỗ trợ ROG Ally
+- **Phần cứng Apple**: Hỗ trợ MacBook T2 được bao gồm theo mặc định
+- **Phần cứng ASUS**: Các bản vá khả năng tương thích phần cứng ASUS mở rộng
+- **Đồ họa**: Hỗ trợ HDR được bật, ghi đè AMDGPU min_powercap (`amdgpu_ignore_min_pcap`)
+
+#### Cải tiến Hệ thống
+- **Đa phương tiện**: Các mô-đun v4l2loopback được bao gồm theo mặc định
+- **Ảo hóa**: Hỗ trợ ACS Override cho VFIO/truyền GPU
+- **Tích hợp Upstream**: Các bản vá chọn lọc từ Clear Linux và linux-next
+
+#### Khác
+
+Nhân CachyOS cũng có một số tính năng tinh tế nhưng cải thiện trải nghiệm người dùng:
+
+- Bao gồm một biến thể gỡ lỗi của nhân cung cấp một tệp nhị phân nhân không bị cắt bỏ cho mục đích gỡ lỗi. Gói này cần thiết để tạo hồ sơ nhân với AutoFDO.
+- [Binder](https://developer.android.com/reference/android/os/Binder), mô-đun cần thiết cho [Waydroid](https://waydro.id/) được bật theo mặc định trong cấu hình nhân
+và đã được [thiết lập](https://github.com/CachyOS/linux-cachyos/blob/master/linux-cachyos/config#L10784).
+
+## Biến thể
+
+CachyOS cung cấp nhiều lựa chọn nhân đa dạng. Tất cả các nhân chúng tôi cung cấp đều được build đi với [Bộ bản vá Cơ sở CachyOS](https://github.com/CachyOS/kernel-patches).
+Đối với mỗi nhân, có một [biến thể -lto tương ứng](#quy-ước-tên-gói) được
+biên dịch với [clang](https://clang.llvm.org/) thay vì [GCC](https://gcc.gnu.org/).
+
+- **linux-cachyos**
+  - Nhân mặc định. Đây là nhân được khuyến nghị nếu bạn không chắc nên sử dụng nhân nào.
+  - Tần số tick 1000Hz để cải thiện khả năng phản hồi.
+  - Được biên dịch với Clang và ThinLTO.
+  - Được tạo hồ sơ với hồ sơ [AutoFDO](https://cachyos.org/blog/2411-kernel-autofdo/) của chúng tôi để cải thiện hiệu suất. [Script](https://github.com/CachyOS/cachyos-benchmarker/blob/master/kernel-autofdo.sh) được sử dụng để tạo hồ sơ nhân.
+- **linux-cachyos-bore**
+  - Sử dụng trình lập lịch [BORE](https://github.com/firelzrd/bore-scheduler).
+- **linux-cachyos-bmq**
+  - Sử dụng trình lập lịch BMQ từ [Project C](https://gitlab.com/alfredchen/projectc/) của Alfred Chen.
+    - `Không hỗ trợ sched-ext.`
+- **linux-cachyos-deckify**
+  - Nhân mặc định cho thiết bị cầm tay. **Không được khuyến nghị** và **không được hỗ trợ** cho trường hợp sử dụng bất kỳ nhân nào khác trên thiết bị cầm tay.
+  - Sử dụng trình lập lịch [BORE](https://github.com/firelzrd/bore-scheduler).
+  - Các bản vá dành riêng cho thiết bị cầm tay dựa trên bộ bản vá cơ sở để cải thiện khả năng tương thích và trải nghiệm tổng thể trên các thiết bị cầm tay.
+- **linux-cachyos-eevdf**
+  - Tinh chỉnh trình lập lịch nhân mặc định để cải thiện khả năng phản hồi.
+- **linux-cachyos-lts**
+  - Dựa trên nhân Hỗ trợ Dài hạn mới nhất.
+  - Sử dụng trình lập lịch [BORE](https://github.com/firelzrd/bore-scheduler).
+  - Có bản vá tối thiểu so với các nhân khác để đảm bảo độ ổn định tối đa.
+- **linux-cachyos-hardened**
+  - Sử dụng trình lập lịch [BORE](https://github.com/firelzrd/bore-scheduler).
+  - Bao gồm bộ bản vá [linux-hardened](https://github.com/anthraxx/linux-hardened).
+  - Cấu hình nhân dựa trên [cấu hình linux-hardened](https://gitlab.archlinux.org/archlinux/packaging/packages/linux-hardened/-/blob/main/config).
+    - Chứa các tăng cường bảo mật rất tích cực làm giảm đáng kể hiệu suất và trải nghiệm người dùng.
+    - `Không hỗ trợ sched-ext.`
+- **linux-cachyos-rc**
+  - Dựa trên nhân mainline mới nhất từ [cây của Linus](https://github.com/torvalds/linux/).
+  - Sử dụng trình lập lịch [BORE](https://github.com/firelzrd/bore-scheduler).
+  - Nhân chính để giới thiệu các tính năng mới trong bộ bản vá của chúng tôi.
+- **linux-cachyos-server**
+  - Được tinh chỉnh cho khối lượng công việc máy chủ so với sử dụng desktop.
+    - Tần số tick 300Hz.
+    - Không có preemption.
+    - Dùng EEVDF có sẵn.
+- **linux-cachyos-rt-bore**
+  - Nhân thời gian thực.
+  - Sử dụng trình lập lịch [BORE](https://github.com/firelzrd/bore-scheduler).
+
+:::note
+Trừ khi được chỉ định khác, có thể giả định một cách an toàn rằng tất cả các biến thể nhân khác
+có cùng cấu hình như nhân mặc định.
+:::
+
+Vui lòng mở một vấn đề trong [linux-cachyos GitHub](https://github.com/CachyOS/linux-cachyos) để đưa ra đề xuất và cải tiến có thể được thêm vào nhân mặc định.
+
+### Quy ước Tên gói
+
+```sh
+linux-cachyos # Gói nhân cơ sở cho nhân mặc định. Được biên dịch với Clang và ThinLTO
+linux-cachyos-hardened # Gói nhân cơ sở cho nhân hardened. Được biên dịch với GCC
+linux-cachyos-hardened-lto # Biên dịch clang cho linux-cachyos-hardened
+linux-cachyos-hardened-{,lto-}headers
+linux-cachyos-hardened-{,lto-}nvidia
+linux-cachyos-hardened-{,lto-}nvidia-open
+linux-cachyos-hardened-{,lto-}zfs
+linux-cachyos-hardened-{,lto-}dbg
+```
+
+## Các mô-đun Nhân được Biên dịch sẵn
+
+Để phục vụ lượng người dùng lớn hơn, CachyOS gửi đi một số mô-đun nhân nổi tiếng và được sử dụng nhiều cùng với nhân. Điều này có nghĩa là người dùng sẽ không còn
+phải biên dịch lại các mô-đun đó sau mỗi lần cập nhật nhân hoặc trên mỗi lần cài đặt nhân mới, nhưng sẽ chỉ cần cài đặt chúng từ kho lưu trữ vì chúng
+đã được biên dịch sẵn. Điều này làm cho các gói `-dkms` mà người dùng có thể có cung cấp cùng mô-đun như phiên bản biên dịch sẵn trở nên lỗi thời.
+
+### ZFS
+
+[ZFS](https://openzfs.org/wiki/Main_Page) là một trong nhiều hệ thống tệp được hỗ trợ trong CachyOS. Do nó được cấp phép theo
+[CDDL](https://opensource.org/license/cddl-1-0), nó không tương thích với giấy phép nhân Linux và do đó không thể được hợp nhất trong cây. Mô-đun được gửi đi bao gồm
+các tính năng và bản vá upstream mới nhất để đảm bảo tương thích với nhân mới nhất.
+
+### NVIDIA
+
+CachyOS gửi đi cả hai phiên bản biên dịch sẵn của các mô-đun nhân mã nguồn đóng và [mã nguồn mở](https://github.com/NVIDIA/open-gpu-kernel-modules/). Do việc phát triển
+mô-đun kernel của NVIDIA là out-of-tree và do đó không theo nhịp phát hành của nhân, cấu hình stock đôi khi có thể không tương thích với nhân mới nhất.
+Để giải quyết, CachyOS vá các mô-đun với các bản vá do cộng đồng tạo hoặc bản vá được NVIDIA chia sẻ trực tiếp.
+
+## Câu hỏi thường gặp
+
+### Tại sao AutoFDO không được sử dụng cho tất cả các biến thể nhân khác?
+
+Vì nó tốn kém để biên dịch vì về cơ bản nó đòi hỏi phải biên dịch nhân hai lần, dẫn đến nhiều thời gian và tài nguyên hơn dành cho việc biên dịch. Quá trình biên dịch một nhân với AutoFDO bao gồm các bước sau:
+
+1) Biên dịch nhân với AutoFDO và khả năng gỡ lỗi được bật.
+2) Tạo hồ sơ có nghĩa là thực thi khối lượng công việc để thu thập dữ liệu hồ sơ cho các tối ưu hóa có thể.
+3) Biên dịch lại nhân với hồ sơ AutoFDO.
+
+Vì vậy, nó chỉ có mặt trong biến thể [linux-cachyos](/vi/features/kernel#variants) tại thời điểm này.
+
+Để biết thêm thông tin về AutoFDO, nhấp vào [đây.](https://cachyos.org/blog/2411-kernel-autofdo/)
+
+### Nhân thời gian thực có cải thiện hiệu suất game không?
+
+Không. Nhân thời gian thực làm cho nhiều mã hơn có thể bị preemption so với một nhân preemption đầy đủ bình thường. Điều này có nghĩa là nhiều tác vụ hơn (bao gồm cả tiến trình game)
+thường xuyên bị preemption và sẽ buộc phải nhường tài nguyên hệ thống, dẫn đến hiệu suất kém hơn.

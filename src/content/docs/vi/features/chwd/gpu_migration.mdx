@@ -1,0 +1,93 @@
+---
+title: Chuyển đổi giữa GPU NVIDIA và AMD
+description: Hướng dẫn chuyển đổi từ NVIDIA sang AMD (và ngược lại) trên CachyOS.
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 3
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+:::note[Hướng dẫn này áp dụng nếu bạn đang thay thế GPU (NVIDIA ↔ AMD) trên bản cài đặt CachyOS hiện có.]
+:::
+
+## Điều kiện tiên quyết
+  - GPU thay thế của bạn được cài đặt và kết nối đúng cách.
+  - Đảm bảo hệ thống của bạn được cập nhật đầy đủ
+    ```bash
+    sudo pacman -Syu
+    ```
+
+### Các bước Di chuyển
+
+<Tabs>
+    <TabItem label='Từ NVIDIA sang AMD'>
+        Trong khi các trình điều khiển AMD được bao gồm trong Nhân Linux, bạn có thể cần dọn dẹp cấu hình NVIDIA cũ và đảm bảo các gói AMD cần thiết được cài đặt.
+        <Steps>
+            1. Kiểm tra cấu hình trình điều khiển NVIDIA hiện đang được cài đặt:
+                ```bash
+                sudo chwd --list-installed
+                ```
+            2. Xóa cấu hình cụ thể bằng cờ `-r`:
+                ```bash
+                sudo chwd -r <tên-cấu-hình>
+                ```
+            3. Tắt hệ thống của bạn và tiến hành cài đặt GPU AMD của bạn.
+            4. Sau khi khởi động. Sử dụng chwd để tự động phát hiện GPU của bạn và cài đặt các gói AMD đúng.
+                ```bash
+                sudo chwd -a
+                ```
+            5. Sau khi cài đặt các trình điều khiển mới, cập nhật initramfs và cấu hình bootloader của bạn
+                > CachyOS bao gồm một pacman hook tự động xây dựng lại initramfs khi các trình điều khiển được thêm vào hoặc loại bỏ.
+                > Điều này đảm bảo các trình điều khiển đúng được tải tại lúc khởi động.
+                - GRUB: `sudo grub-mkconfig -o /boot/grub/grub.cfg`
+                - systemd-boot: `sudo sdboot-manage gen`
+                - Limine: `sudo limine-mkinitcpio`
+            6. Khởi động lại để áp dụng thay đổi.
+                ```bash
+                sudo reboot
+                ```
+            7. Sau khi khởi động lại, xác minh rằng các trình điều khiển AMD đang hoạt động.
+                ```bash
+                vulkaninfo | grep "deviceName"
+                ```
+                hoặc
+                ```bash
+                glxinfo | grep "OpenGL renderer"
+                ```
+                Nếu bạn thấy GPU AMD của mình được liệt kê, các trình điều khiển đang hoạt động chính xác.
+        </Steps>
+    </TabItem>
+    <TabItem label='Từ AMD sang NVIDIA'>
+        <Steps>
+            1. Dọn dẹp các gói AMD còn lại.
+                ```bash
+                sudo chwd -r amd
+                ```
+            2. Tắt hệ thống của bạn và tiến hành cài đặt GPU NVIDIA của bạn.
+            3. Sau khi khởi động. Sử dụng chwd để tự động phát hiện GPU của bạn và cài đặt các gói NVIDIA đúng.
+                ```bash
+                sudo chwd -a
+                ```
+            4. Sau khi cài đặt các trình điều khiển mới, cập nhật initramfs và cấu hình bootloader của bạn
+                > CachyOS bao gồm một pacman hook tự động xây dựng lại initramfs khi các trình điều khiển được thêm vào hoặc loại bỏ.
+                > Điều này đảm bảo các trình điều khiển đúng được tải tại lúc khởi động.
+                - GRUB: `sudo grub-mkconfig -o /boot/grub/grub.cfg`
+                - systemd-boot: `sudo sdboot-manage gen`
+                - Limine: `sudo limine-mkinitcpio`
+            5. Khởi động lại để áp dụng thay đổi.
+                ```bash
+                sudo reboot
+                ```
+            6. Sau khi khởi động lại, xác minh rằng các trình điều khiển NVIDIA đang hoạt động.
+                ```bash
+                nvidia-smi
+                ```
+                hoặc
+                ```bash
+                glxinfo | grep "OpenGL renderer"
+                ```
+                Nếu bạn thấy GPU NVIDIA của mình được liệt kê, các trình điều khiển đang hoạt động chính xác.
+        </Steps>
+    </TabItem>
+</Tabs>

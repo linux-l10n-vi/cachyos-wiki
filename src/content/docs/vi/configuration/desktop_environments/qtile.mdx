@@ -1,0 +1,110 @@
+---
+title: Phím tắt & FAQ của Qtile
+description: Phím tắt và câu hỏi thường gặp của Qtile trên CachyOS
+---
+
+import { Kbd } from 'starlight-kbd/components'
+
+Ghi nhận công cho [Shendisx](https://github.com/Shendisx) đã tạo ra cài đặt Qtile này.
+
+> Phiên X11 và Wayland
+
+## Phím tắt
+
+Hầu hết các tổ hợp phím đều yêu cầu sử dụng phím mod, trong trường hợp của chúng tôi là phím Windows (được gọi là SUPER), bạn có thể thay đổi nó trong tệp cấu hình.
+Một số tổ hợp có thể sử dụng mod1 (phím ALT).
+
+### Điều khiển ứng dụng
+
+| Mô tả | Phím |
+|-------------|-----|
+| Mở terminal | <Kbd linux="Super+Return" /> |
+| Mở Rofi (Trình khởi chạy chương trình) | <Kbd linux="Alt+Space" /> |
+| Mở trình quản lý tệp (Thunar) | <Kbd linux="Super+E" /> |
+| Đóng cửa sổ đang focus | <Kbd linux="Super+Q" /> |
+
+### Điều hướng không gian làm việc
+
+| Mô tả | Phím |
+|-------------|-----|
+| Chuyển đến không gian làm việc (1-9) | <Kbd linux="Super+1" /> đến <Kbd linux="Super+9" /> |
+
+### Điều hướng cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Di chuyển focus sang trái | <Kbd linux="Super+H" /> |
+| Di chuyển focus sang phải | <Kbd linux="Super+L" /> |
+| Di chuyển focus xuống dưới | <Kbd linux="Super+J" /> |
+| Di chuyển focus lên trên | <Kbd linux="Super+K" /> |
+| Di chuyển cửa sổ giữa các cột hoặc lên/xuống trong stack | <Kbd linux="Super+Space" /> |
+
+### Quản lý cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Di chuyển cửa sổ đang focus sang trái | <Kbd linux="Super+Shift+H" /> |
+| Di chuyển cửa sổ đang focus sang phải | <Kbd linux="Super+Shift+L" /> |
+| Di chuyển cửa sổ đang focus xuống dưới | <Kbd linux="Super+Shift+J" /> |
+| Di chuyển cửa sổ đang focus lên trên | <Kbd linux="Super+Shift+K" /> |
+| Bật/tắt toàn màn hình | <Kbd linux="Super+F" /> |
+| Bật/tắt nổi | <Kbd linux="Super+V" /> |
+| Ghim cửa sổ (theo giữa các không gian làm việc) | <Kbd linux="Super+S" /> |
+
+### Thay đổi kích thước cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Mở rộng cửa sổ đang focus sang trái | <Kbd linux="Super+Control+H" /> |
+| Mở rộng cửa sổ đang focus sang phải | <Kbd linux="Super+Control+L" /> |
+| Mở rộng cửa sổ đang focus xuống dưới | <Kbd linux="Super+Control+J" /> |
+| Mở rộng cửa sổ đang focus lên trên | <Kbd linux="Super+Control+K" /> |
+| Đặt lại tất cả kích thước cửa sổ về ban đầu | <Kbd linux="Super+N" /> |
+
+### Điều khiển bố cục
+
+| Mô tả | Phím |
+|-------------|-----|
+| Bật/tắt giữa các cạnh đã chia và chưa chia của stack | <Kbd linux="Super+Shift+Return" /> |
+| Bật/tắt giữa các bố cục | <Kbd linux="Super+Tab" /> |
+
+### Điều khiển chuột
+
+| Mô tả | Phím |
+|-------------|-----|
+| Kéo cửa sổ nổi | <Kbd linux="Super+Left_Click" /> |
+| Thay đổi kích thước cửa sổ nổi | <Kbd linux="Super+Right_Click" /> |
+| Đưa cửa sổ lên phía trước | <Kbd linux="Super+Scroll_Wheel_Button" /> |
+
+### Chụp ảnh màn hình
+
+| Mô tả | Phím |
+|-------------|-----|
+| Thực thi Flameshot (tiện ích chụp ảnh màn hình) | <Kbd linux="Print" /> |
+| Chụp ảnh toàn màn hình (lưu trong ~/Pictures) | <Kbd linux="Control+Print" /> |
+
+### Điều khiển hệ thống
+
+| Mô tả | Phím |
+|-------------|-----|
+| Tải lại cấu hình Qtile | <Kbd linux="Super+Control+R" /> |
+| Thoát Qtile (kết thúc phiên X) | <Kbd linux="Super+Control+Q" /> |
+
+## FAQ
+
+### Tại sao widget âm lượng hiển thị lỗi hoặc bị kẹt ở 0%?
+
+* Điều này đôi khi là do widget âm lượng của Qtile không thể phát hiện Thiết bị Đầu ra Mặc định của bạn. Bạn có thể [xem trong wiki](https://docs.qtile.org/en/latest/manual/ref/widgets.html#pulsevolume) để biết thêm thông tin.
+
+### Có tập lệnh autostart.sh không?
+
+* Có, nó nằm trong `scripts/` từ thư mục Qtile.
+
+### Thanh công cụ của Qtile có tương tác với chuột không?
+
+* Có, ví dụ nếu bạn cuộn trên các chấm nhỏ là không gian làm việc của bạn (Hoạt động,Không hoạt động,Trống v.v.) bạn sẽ chuyển sang Trái hoặc Phải hoặc thậm chí nhấp vào một trong số chúng.
+* Một ví dụ khác là bố cục (cột theo mặc định), nhấp vào nó cho phép bạn chuyển đổi giữa các bố cục có sẵn
+* Sử dụng CPU và RAM bằng cách nhấp vào nó sẽ mở Btop (Trình giám sát hệ thống TUI)
+* Tăng/Giảm/Tắt tiếng bằng cách tương tác trên widget âm lượng
+
+Để biết thêm thông tin về Qtile, vui lòng [kiểm tra wiki của họ](https://docs.qtile.org/en/stable/).

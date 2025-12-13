@@ -1,0 +1,207 @@
+---
+title: Quản lý Nhân Linux và Framework Sched-ext với CachyOS Kernel Manager
+description: CachyOS Kernel Manager là một công cụ mạnh mẽ để quản lý nhân, cho phép người dùng dễ dàng cài đặt hoặc xây dựng nhân tùy chỉnh một cách dễ dàng.
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 4
+---
+
+import ImageComponent from '~/components/image-component.astro';
+
+Cài đặt một Nhân từ Kho lưu trữ
+---------------------------------------
+
+CachyOS Kernel Manager giúp đơn giản hóa việc cài đặt và quản lý nhân từ bất kỳ kho lưu trữ Arch Linux nào.
+
+Để cài đặt một nhân. Khởi động ứng dụng `CachyOS Kernel Manager` và chọn nhân mong muốn bằng cách đánh dấu vào hộp `[]` từ danh sách tất cả các tùy chọn có sẵn, sau đó chỉ cần nhấn `Execute` để bắt đầu cài đặt nhân.
+
+Để gỡ cài đặt một nhân, chỉ cần bỏ đánh dấu vào hộp `[]` bên cạnh nhân đã cài đặt mà bạn muốn xóa và nhấn `Execute` một lần nữa.
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/cachyos-km1.png')} />
+
+:::note
+Nút `Execute` trở nên không khả dụng khi bạn chọn một nhân đã được cài đặt.
+:::
+
+Cấu hình và Xây dựng một Nhân CachyOS Tùy chỉnh
+---------------------------------
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/cachyos-km2.png')} />
+
+:::note
+Trình quản lý Nhân CachyOS được thiết kế đặc biệt để xây dựng các nhân tùy chỉnh cho **biến thể CachyOS** và không hỗ trợ xây dựng hoặc cấu hình nhân Arch Linux tiêu chuẩn hoặc bất kỳ biến thể nào khác.
+:::
+
+*Để bắt đầu. Mở CachyOS Kernel Manager và nhấp vào nút `Configure` để bắt đầu điều chỉnh các cài đặt khác nhau, chẳng hạn như trình lập lịch mong muốn, tốc độ tick và nhiều hơn nữa. Khi bạn đã thực hiện các thay đổi mong muốn, nhấp vào `Build kernel` để bắt đầu xây dựng nhân CachyOS tùy chỉnh của bạn.*
+
+**Các gói nhân đã xây dựng và bộ nhớ đệm được lưu trữ trong** `~/.cache/cachyos-km/`
+
+**Các tùy chọn cấu hình có sẵn:**
+
+* `Tên gói tùy chỉnh`: Với tùy chọn này, bạn có thể đặt tên nhân của mình bất cứ thứ gì bạn muốn. Ví dụ: `linux-custom-cachy`
+* Trình lập lịch (BORE, RC, RT, RT+BORE, EEVDF và BMQ)
+* Bật cấu hình CachyOS
+* Tinh chỉnh Cấu hình qua nconfig, menuconfig, xconfig, hoặc gconfig
+* Bật/Tắt NUMA
+* Bật/Tắt Modprobed-db
+* KBUILD CFLAGS (-O3 hoặc -O2)
+* Governor hiệu suất làm mặc định
+* Bật BBR3
+* Lựa chọn tốc độ tick (100Hz, 250Hz, 300Hz, 500Hz, 600Hz, 750Hz, 1000Hz)
+* Chế độ không tick (idle, periodic, full)
+* Preemption (Đầy đủ, Tự nguyện hoặc Máy chủ)
+* Transparent Hugepages (Luôn luôn hoặc Madvise)
+* Bật/Tắt DAMON
+* Bật/Tắt Phát hiện kiến trúc CPU tự động
+* Áp dụng tối ưu hóa nhân cho các kiến trúc CPU cụ thể
+* Bật LTO (Đầy đủ, Mỏng, Không)
+* Xây dựng Mô-đun ZFS
+* Xây dựng Mô-đun NVIDIA Đóng
+* Xây dựng Mô-đun NVIDIA Mở
+* Bao gồm vmlinux với thông tin/gỡ lỗi
+* Tải/Lưu Cấu hình trước của CachyOS Kernel Manager: `(Chỉ các cấu hình trước từ chính trình quản lý)`
+* Quản lý Bản vá Nhân (Hỗ trợ Từ xa và Cục bộ)
+
+*Khi nhân đã được xây dựng thành công, bạn sẽ được nhắc nhập mật khẩu sudo của mình để cài đặt nhân.*
+
+## Quản lý Framework Sched-ext
+
+Trình quản lý Nhân cung cấp giao diện người dùng đồ họa (GUI) để quản lý và kiểm soát các trình lập lịch sched-ext. Truy cập GUI bằng cách nhấp vào nút `sched-ext scheduler config` trong cửa sổ chính.
+
+<br />
+<ImageComponent imgsrc={import('~/assets/images/cachyos-km3.png')} />
+
+GUI này cho phép bạn:
+
+- Chuyển đổi giữa các trình lập lịch sched-ext (scx) khác nhau.
+- Bật hoặc tắt dịch vụ trình lập lịch.
+- Kiểm tra trình lập lịch đang chạy.
+- Đặt cờ và cấu hình của trình lập lịch.
+
+Để đạt được điều này, Trình quản lý Nhân sử dụng `scx_loader` với cấu hình được lưu trữ trong `/etc/scx_loader.toml`.
+
+Để biết thêm thông tin về tệp cấu hình `scx_loader`, hãy kiểm tra [tài liệu này](https://github.com/sched-ext/scx/blob/main/tools/scx_loader/configuration.md).
+
+- `scx_loader` hoạt động như thế nào?
+    - Khi bạn đã chọn trình lập lịch và cấu hình, scx_loader sẽ sau đó khởi động trình lập lịch với cấu hình đã được chọn và lưu cấu hình này vào tệp `/etc/scx_loader.toml` để đạt được sự tồn tại qua các lần khởi động lại. Ví dụ về tệp sẽ trông như thế nào khi chọn `scx_bpfland` với cấu hình `Gaming`:
+        ```toml
+        default_sched = "scx_bpfland"
+        default_mode = "Gaming"
+
+        [scheds.scx_bpfland]
+        auto_mode = []
+        gaming_mode = ["-m", "performance"]
+        lowlatency_mode = ["-k", "-s", "5000", "-l", "5000"]
+        powersave_mode = ["-m", "powersave"]
+        ```
+
+### Cấu hình Trình lập lịch
+
+- "Cấu hình" dùng để làm gì?
+  - Chúng là các cấu hình sẵn cho trình lập lịch sửa đổi các cờ dựa trên các tổ hợp đã được chứng minh để tăng cường hiệu quả cho các trường hợp sử dụng cụ thể, chẳng hạn như "Gaming."
+
+#### Bpfland
+
+**Độ trễ thấp**
+* **Cờ dòng lệnh:** `-s 5000 -S 500 -l 5000 -m performance`
+* **Mô tả:** Dành để giảm độ trễ với chi phí là thông lượng. Phù hợp cho các ứng dụng real-time mềm như Xử lý Âm thanh và Đa phương tiện.
+
+**Game**
+* **Cờ dòng lệnh:** `-m performance`
+* **Mô tả:** Tối ưu hóa tính nhất quán hiệu suất trong các game trên hệ thống có nhân lai. Ưu tiên các nhân P-core hơn E-core trên CPU Intel và CCDs trên CPU Ryzen X3D.
+
+**Tiết kiệm năng lượng**
+* **Cờ dòng lệnh:** `-m powersave`
+* **Mô tả:** Ưu tiên hiệu quả năng lượng. Ưu tiên các nhân kém hiệu suất hơn (ví dụ: E-core trên Intel).
+
+**Máy chủ**
+* **Cờ dòng lệnh:** `-p`
+* **Mô tả:** Ưu tiên các tác vụ có mức độ ưu tiên cao. Tùy chọn này có thể tăng thông lượng với đánh đổi là độ trễ và phù hợp hơn cho khối lượng công việc máy chủ.
+
+#### Flash
+
+**Độ trễ thấp**
+* **Cờ dòng lệnh:** `-m performance -w -C 0`
+* **Mô tả:** Dành để giảm độ trễ với đánh đổi là thông lượng. Phù hợp cho các ứng dụng real-time như Xử lý Âm thanh và Đa phương tiện.
+
+**Game**
+* **Cờ dòng lệnh:** `-m all`
+* **Mô tả:** Tối ưu hóa cho hiệu suất cao trong các game.
+
+**Tiết kiệm năng lượng**
+* **Cờ dòng lệnh:** `-m powersave -I 10000 -t 10000 -s 10000 -S 1000`
+* **Mô tả:** Ưu tiên hiệu quả năng lượng. Ưu tiên các nhân kém hiệu suất hơn (ví dụ, E-core trên Intel) và giới thiệu một chu kỳ nghỉ bắt buộc mỗi 10ms để tăng tiết kiệm năng lượng.
+
+**Máy chủ**
+* **Cờ dòng lệnh:** `-m all -s 20000 -S 1000 -I -1 -D -L`
+* **Mô tả:** Được tinh chỉnh cho khối lượng công việc máy chủ. Trao đổi khả năng phản hồi để lấy thông lượng.
+
+#### LAVD
+
+**Game & Độ trễ thấp**
+* **Cờ dòng lệnh:** `--performance`
+* **Mô tả:** Tối đa hóa hiệu suất bằng cách sử dụng tất cả các nhân có sẵn, ưu tiên các nhân vật lý.
+
+**Tiết kiệm năng lượng**
+* **Cờ dòng lệnh:** `--powersave`
+* **Mô tả:** Tối thiểu hóa tiêu thụ năng lượng trong khi duy trì hiệu suất hợp lý. Ưu tiên các nhân và luồng hiệu quả hơn các nhân vật lý.
+
+#### P2DQ
+
+**Game**
+* **Cờ dòng lệnh:** `--task-slice true -f --sched-mode performance`
+* **Mô tả:** Cải thiện tính nhất quán trong hiệu suất game và tăng xu hướng lập lịch trên các nhân hiệu suất cao hơn.
+
+**Độ trễ thấp**
+* **Cờ dòng lệnh:** `-y -f --task-slice true`
+* **Mô tả:** Giảm độ trễ bằng cách làm cho các tác vụ tương tác bám vào CPU mà chúng được gán và tăng sự ổn định.
+
+**Tiết kiệm năng lượng**
+* **Cờ dòng lệnh:** `--sched-mode efficiency`
+* **Mô tả:** Tăng cường hiệu quả năng lượng bằng cách ưu tiên các nhân hiệu quả về năng lượng.
+
+**Máy chủ**
+* **Cờ dòng lệnh:** `--keep-running`
+* **Mô tả:** Cải thiện khối lượng công việc máy chủ bằng cách cho phép các tác vụ chạy vượt quá thời gian của chúng nếu CPU đang nghỉ.
+
+#### Tickless
+
+**Game**
+* **Cờ dòng lệnh:** `-f 5000 -s 5000`
+* **Mô tả:** Tăng hiệu suất game bằng cách tăng tần suất trình lập lịch phát hiện cạnh tranh CPU và kích hoạt chuyển đổi ngữ cảnh với thời gian ngắn hơn.
+
+**Tiết kiệm năng lượng**
+* **Cờ dòng lệnh:** `-f 50 -p`
+* **Mô tả:** Tăng cường hiệu quả năng lượng bằng cách giảm kiểm tra cạnh tranh và cố gắng giữ các tác vụ trên cùng một CPU.
+
+**Độ trễ thấp**
+* **Cờ dòng lệnh:** `-f 5000 -s 1000`
+* **Mô tả:** Tương tự như cấu hình game nhưng với thời gian giảm thêm.
+
+**Máy chủ**
+* **Cờ dòng lệnh:** `-f 100`
+* **Mô tả:** Giảm tần suất trình lập lịch kiểm tra cạnh tranh CPU để cải thiện thông lượng với đánh đổi là khả năng phản hồi.
+
+#### Cosmos
+
+**Tự động**
+* **Cờ dòng lệnh:** `-d`
+* **Mô tả:** Tắt đánh thức bị trì hoãn. Giảm thông lượng và hiệu suất cho một số khối lượng công việc trong khi giảm tiêu thụ năng lượng.
+
+**Game**
+* **Cờ dòng lệnh:** `-c 0 -p 0`
+* **Mô tả:** Tắt theo dõi tải CPU và luôn thực thi lập lịch dựa trên hạn chót để cải thiện khả năng phản hồi.
+
+**Tiết kiệm năng lượng**
+* **Cờ dòng lệnh:** `-m powersave -d -p 5000`
+* **Mô tả:** Ưu tiên hiệu quả năng lượng. Thêm các nhân kém hiệu suất hơn (ví dụ: E-core trên Intel) và tắt đánh thức bị trì hoãn, giảm thông lượng trong khi tăng hiệu quả năng lượng. Thăm dò tải CPU tăng lên 5ms.
+
+**Độ trễ thấp**
+* **Cờ dòng lệnh:** `-m performance -c 0 -p 0 -w`
+* **Mô tả:** Dành để giảm độ trễ với đánh đổi là thông lượng. Phù hợp cho các ứng dụng real-time như Xử lý Âm thanh và Đa phương tiện. Luôn thực thi lập lịch dựa trên thời hạn và tối ưu hóa đánh thức đồng bộ để cải thiện tính dự đoán hiệu suất.
+
+**Máy chủ**
+* **Cờ dòng lệnh:** `-a -s 20000`
+* **Mô tả:** Bật ưu tiên không gian địa chỉ để cải thiện tính cục bộ và hiệu suất trong một số khối lượng công việc nhạy cảm với bộ đệm. Thăm dò tăng lên 20ms.

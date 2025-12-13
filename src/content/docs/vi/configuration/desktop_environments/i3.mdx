@@ -1,0 +1,109 @@
+---
+title: Phím tắt & câu hỏi thường gặp của i3wm
+description: Phím tắt và câu hỏi thường gặp của i3wm trên CachyOS
+---
+
+import { Kbd } from 'starlight-kbd/components'
+
+Ghi nhận công cho [vnepogodin](https://github.com/vnepogodin) đã tạo ra cấu hình này đơn giản và dễ hiểu.
+
+> Chỉ dành cho X11, không tương thích với Wayland
+
+## Phím tắt
+
+Hầu hết các tổ hợp phím đều yêu cầu sử dụng phím mod, trong trường hợp của chúng tôi là phím Windows (được gọi là SUPER), bạn có thể thay đổi nó trong tệp cấu hình.
+
+### Điều khiển ứng dụng
+
+| Mô tả | Phím |
+|-------------|-----|
+| Mở terminal | <Kbd linux="Super+Return" /> |
+| Mở Rofi (Trình khởi chạy chương trình) | <Kbd linux="Control+Space" /> |
+| Đóng cửa sổ đang tập trung | <Kbd linux="Super+Q" /> |
+
+### Điều hướng không gian làm việc
+
+| Mô tả | Phím |
+|-------------|-----|
+| Chuyển đến không gian làm việc (1-9) | <Kbd linux="Super+1" /> đến <Kbd linux="Super+9" /> |
+
+### Điều hướng cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Thay đổi tập trung sang trái | <Kbd linux="Super+ArrowLeft" /> |
+| Thay đổi tập trung sang phải | <Kbd linux="Super+ArrowRight" /> |
+| Thay đổi tập trung lên trên | <Kbd linux="Super+ArrowUp" /> |
+| Thay đổi tập trung xuống dưới | <Kbd linux="Super+ArrowDown" /> |
+| Tập trung container nổi/xếp lát cuối cùng | <Kbd linux="Super+Space" /> |
+
+### Quản lý cửa sổ
+
+| Mô tả | Phím |
+|-------------|-----|
+| Di chuyển cửa sổ đang tập trung đến không gian làm việc (1-9) | <Kbd linux="Super+Shift+1" /> đến <Kbd linux="Super+Shift+9" /> |
+| Di chuyển cửa sổ đang tập trung sang trái | <Kbd linux="Super+Shift+ArrowLeft" /> |
+| Di chuyển cửa sổ đang tập trung sang phải | <Kbd linux="Super+Shift+ArrowRight" /> |
+| Di chuyển cửa sổ đang tập trung lên trên | <Kbd linux="Super+Shift+ArrowUp" /> |
+| Di chuyển cửa sổ đang tập trung xuống dưới | <Kbd linux="Super+Shift+ArrowDown" /> |
+| Bật/tắt chế độ toàn màn hình | <Kbd linux="Super+F" /> |
+| Bật/tắt chế độ nổi | <Kbd linux="Super+Shift+Space" /> |
+
+### Điều khiển bố cục
+
+| Mô tả | Phím |
+|-------------|-----|
+| Chia bố cục theo chiều ngang | <Kbd linux="Super+H" /> |
+| Chia bố cục theo chiều dọc | <Kbd linux="Super+V" /> |
+| Bật/tắt chia | <Kbd linux="Super+T" /> |
+| Thay đổi bố cục container thành dạng xếp chồng | <Kbd linux="Super+S" /> |
+| Thay đổi bố cục container thành dạng tab | <Kbd linux="Super+W" /> |
+
+### Chế độ thay đổi kích thước
+
+| Mô tả | Phím |
+|-------------|-----|
+| Vào chế độ thay đổi kích thước | <Kbd linux="Super+R" /> |
+| Thu hẹp (trong chế độ thay đổi kích thước) | <Kbd linux="ArrowLeft" /> |
+| Mở rộng (trong chế độ thay đổi kích thước) | <Kbd linux="ArrowRight" /> |
+| Phóng to (trong chế độ thay đổi kích thước) | <Kbd linux="ArrowUp" /> |
+| Thu nhỏ (trong chế độ thay đổi kích thước) | <Kbd linux="ArrowDown" /> |
+| Thoát chế độ thay đổi kích thước | <Kbd linux="Return" /> / <Kbd linux="Escape" /> / <Kbd linux="Super+R" /> |
+
+### Điều khiển hệ thống
+
+| Mô tả | Phím |
+|-------------|-----|
+| Khóa màn hình | <Kbd linux="Super+L" /> |
+| Tải lại cấu hình i3 | <Kbd linux="Super+Shift+C" /> |
+| Khởi động lại i3 tại chỗ | <Kbd linux="Super+Shift+R" /> |
+| Thoát i3 (kết thúc phiên X) | <Kbd linux="Super+Shift+E" /> |
+
+## FAQ
+
+### Làm thế nào để tạo autostart cho một chương trình? ví dụ "đặt hình nền khi khởi động"
+
+* i3 đã bao gồm một tính năng autostart linh hoạt cho phép bạn thực thi bất kỳ chương trình nào hoặc thậm chí cả lệnh
+
+Nếu bạn nhìn vào cuối tệp cấu hình của chúng tôi, bạn sẽ thấy một số dòng bắt đầu bằng exec và exec_always.
+
+Ví dụ:
+
+```exec chromium```
+
+Điều này có nghĩa là Chromium sẽ bắt đầu trong không gian làm việc 1 bất cứ khi nào bạn đăng nhập vào phiên i3 của mình.
+
+### exec khác gì với exec_always?
+
+exec_always cho phép bạn luôn thực hiện một hành động nhất định ngay cả sau khi i3wm được tải lại.
+
+* Để có thêm tài liệu tham khảo và thông tin, hãy xem hướng dẫn sử dụng của i3
+* https://i3wm.org/docs/userguide.html#exec
+
+### Các phím đa phương tiện có hoạt động không?
+
+* Có, chúng hoạt động.
+
+Để biết thêm thông tin về i3wm. Vui lòng kiểm tra wiki của họ để tham khảo.
+
+* https://i3wm.org/docs/userguide.html

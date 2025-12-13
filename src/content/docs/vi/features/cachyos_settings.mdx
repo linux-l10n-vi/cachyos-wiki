@@ -1,0 +1,122 @@
+---
+title: Cài đặt CachyOS
+---
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+
+Cùng với các nhân và kho lưu trữ được tối ưu hóa của chúng tôi, chúng tôi cũng cung cấp các cài đặt giúp cải thiện thêm trải nghiệm desktop, cũng như một số
+script trợ giúp để cải thiện chất lượng cuộc sống (QoL). Tất cả các cấu hình và script này nằm trong gói `cachyos-settings`.
+
+## Tinh chỉnh sysctl
+
+Chúng tôi cung cấp nhiều tinh chỉnh sysctl nhằm cải thiện hiệu suất desktop tổng thể. Mỗi mục sysctl được ghi chép đầy đủ
+trong tệp [70-cachyos-settings.conf](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/sysctl.d/70-cachyos-settings.conf).
+
+Để thực hiện thay đổi bất kỳ giá trị nào, sao chép mục gốc và tạo một tệp mới trong `/etc/sysctl.d/` với giá trị đã sửa đổi.
+
+### Sửa đổi giá trị sysctl
+
+<Steps>
+
+1. Xem giá trị gốc từ `cachyos-settings`
+
+    ```sh
+    cat /usr/lib/sysctl.d/99-cachyos-settings.conf
+    # Chỉ dành cho thử nghiệm!
+    # Để các tác vụ Realtime chạy lâu khi cần
+    # sched: RT throttling được kích hoạt
+    kernel.sched_rt_runtime_us=-1
+    ```
+
+2. Tạo một tệp mới trong `/etc/sysctl.d` để thực hiện thay đổi đối với cài đặt sysctl
+
+    ```sh title="Khôi phục kernel.sched_rt_runtime_us= về giá trị mặc định"
+    sudo micro /etc/sysctl.d/99-kernel-sched-rt.conf # Nếu tệp không tồn tại, lệnh này sẽ tạo và cho phép bạn chỉnh sửa tệp
+    kernel.sched_rt_runtime_us=950000
+    ```
+
+</Steps>
+
+## Quy tắc udev
+
+- [Quy tắc ZRAM](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/30-zram.rules) - Đặt swappiness của ZRAM thành một giá trị tích cực hơn
+để cache có khả năng swap sang ZRAM cao hơn
+- [Quyền HPET](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/40-hpet-permissions.rules) - Cho phép truy cập vào các node thiết bị `rtc0`
+và `hpet` bởi nhóm audio
+- [Quản lý năng lượng SATA](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/50-sata.rules) - Đặt chính sách quản lý năng lượng của thiết bị SATA thành `max_performance`
+- [Quy tắc I/O Scheduler](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/60-ioschedulers.rules) - Chọn trình lập lịch tối ưu cho mỗi loại ổ đĩa (HDD, SSD, NVMe)
+- [Quy tắc hdparm](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/69-hdparm.rules) - Đặt SATA và IDE HDDs thành hiệu suất tối đa
+- [NVIDIA RTD3](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/71-nvidia.rules) - Cấu hình chức năng quản lý năng lượng động cho thế hệ GPU Turing. `RTD3 không hoạt động đúng trên GPU Turing với các mô-đun mở`
+- [Độ trễ CPU DMA](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/99-cpu-dma-latency.rules) -
+Cho phép truy cập vào node thiết bị `cpu_dma_latency` bởi nhóm audio
+- [snd_hda_intel PM](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/udev/rules.d/20-audio-pm.rules) - Đặt tiết kiệm năng lượng thành `0` khi sử dụng AC Power và khôi phục giá trị trước đó khi chuyển sang Pin
+
+## Tùy chọn modprobe
+
+- Buộc trình điều khiển AMDGPU trên Southern Islands (GCN 1.0) và Sea Islands (GCN 2.0)
+- Bật [các tinh chỉnh khác nhau](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/modprobe.d/nvidia.conf) cho NVIDIA
+- Đưa các mô-đun watchdog vào danh sách đen
+- Tắt power_save cho trình điều khiển âm thanh **sna_hda_intel**
+
+## Script Trợ giúp
+
+- `cachyos-bugreport.sh` - Thu thập nhiều log từ `inxi`, `dmesg` và `journalctl` để hỗ trợ khắc phục sự cố
+- `game-performance` - Script wrapper cho **`powerprofilesctl`** để chuyển sang hiệu suất performance theo yêu cầu.
+Xem [Chuyển đổi Hồ sơ Hiệu suất Theo Yêu cầu](/vi/configuration/gaming#power-profile-switching-on-demand)
+- `dlss-swapper` - Script wrapper để buộc cấu hình DLSS mới nhất trong các game hỗ trợ công nghệ này
+- `dlss-swapper-dll` - Giống như `dlss-swapper`, nhưng yêu cầu cập nhật thủ công thư viện `nvngx_dlss.dll` đi kèm với game; có thể hoạt động với các game có vấn đề với phiên bản thông thường của script
+- `kerver` - Script QoL để hiển thị thông tin về nhân hiện tại
+- `paste-cachyos` - Script để dán output terminal cho các tệp văn bản từ hệ thống
+
+    <Tabs>
+        <TabItem label="Tải lên tệp văn bản">
+            ```sh
+            paste-cachyos /path/to/file
+            ```
+        </TabItem>
+        <TabItem label="Tải lên Output Terminal">
+            ```sh
+            <command> | paste-cachyos
+            ```
+        </TabItem>
+    </Tabs>
+- [pci-latency](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/bin/pci-latency) - Giảm giá trị latency_timer xuống `80` cho các card âm thanh PCI và đặt lại tất cả các thiết bị PCI khác về `20` và `0`
+    ```sh title="Kích hoạt pci-latency toàn hệ thống"
+    sudo systemctl enable --now pci-latency.service
+    ```
+- `sbctl-batch-sign` - Script trợ giúp để dễ dàng ký các hình ảnh nhân và tệp nhị phân EFI cho secure boot và lưu chúng vào cơ sở dữ liệu sbctl
+- `topmem` - Hiển thị thống kê RAM & swap & ksm của 10 tiến trình theo thứ tự giảm dần
+- `zink-run` - Dễ dàng thực thi chương trình OpenGL thông qua Zink Gallium Driver
+
+
+## Cấu hình khác
+
+### Tinh chỉnh Sử dụng Bộ nhớ
+
+- Cấu hình THP Shrinker `max_ptes_none = 409`
+- Đặt kích thước tối đa thành `50MB` cho systemd journal
+- [ZRAM Generator](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/systemd/zram-generator.conf) - Đặt ZRAM cùng kích thước với RAM và sử dụng ZSTD để nén
+
+### Quy tắc Ananicy-cpp
+
+- [ananicy-cpp](https://gitlab.com/ananicy-cpp/ananicy-cpp) với [bộ quy tắc được bảo trì bởi cộng đồng](https://github.com/CachyOS/ananicy-rules)
+
+### Tùy chỉnh Mạng
+
+- [systemd-resolved làm Trình giải quyết DNS mặc định](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/lib/NetworkManager/conf.d/dns.conf) cho NetworkManager
+
+### NTP
+
+- Máy chủ ưu tiên được đặt thành `Cloudflare`
+- Máy chủ dự phòng: `Google` và `Arch Linux`
+
+### Tinh chỉnh Dịch vụ systemd
+
+- Thời gian chờ để bắt đầu một dịch vụ/unit được đặt thành `15s`
+- Thời gian chờ để dừng một dịch vụ/unit được đặt thành `10s`
+- Giới hạn mềm cho bộ mô tả tệp đã mở được đặt thành `2048`
+- Giới hạn cứng cho bộ mô tả tệp đã mở được đặt thành `2097152`
+
+### X.Org
+
+- Bật [Tap để Click](https://github.com/CachyOS/CachyOS-Settings/blob/master/usr/share/X11/xorg.conf.d/20-touchpad.conf) theo mặc định cho tất cả các phiên X11
